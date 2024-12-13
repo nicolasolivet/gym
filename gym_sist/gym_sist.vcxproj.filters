@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="menus">
+      <UniqueIdentifier>{a1689c89-23ac-445e-be4e-7cce7548b47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="archivos">
+      <UniqueIdentifier>{6059d9bb-b72e-4f34-ad55-8d2b9ef5f20c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="servicios">
+      <UniqueIdentifier>{e1b1e7ab-d4e6-4b12-a2d6-df82ef270322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="clases">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="clases\cpp">
+      <UniqueIdentifier>{31776b66-b846-471d-aec3-28fddac441e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="clases\h">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gym_sist.cpp">
+      <Filter>clases</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioPago.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioReclamo.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioSocio.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoPagos.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoReclamos.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoSocios.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="Autenticador.cpp">
+      <Filter>menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Actividad.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Asistencia.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Ejercicio.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Empleado.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Fecha.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Pago.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Reclamo.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Rutina.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Socio.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Usuario.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UsuarioAutenticado.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ServicioPago.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioReclamo.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioSocio.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoPagos.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoReclamos.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoSocios.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="Actividad.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Asistencia.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Ejercicio.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Empleado.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Fecha.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Pago.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Reclamo.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Rutina.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Socio.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Usuario.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="UsuarioAutenticado.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Autenticador.h">
+      <Filter>menus</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
