@@ -57,7 +57,7 @@ int ArchivoSocios::buscarReg(int idSocio)
     int posicion = 0;
     FILE* pfile;
     pfile = fopen(_nombreArchivo.c_str(), "rb");
-    if (pfile == nullptr) { return -2; }
+    if (pfile == nullptr) { return -1; }
 
     while (fread(&socio, sizeof(Socio), 1, pfile))
     {
@@ -70,7 +70,7 @@ int ArchivoSocios::buscarReg(int idSocio)
     }
     
     fclose(pfile);
-    return -1;
+    return -2;
 }
 
 int ArchivoSocios::cantidadRegistros()

@@ -6,13 +6,11 @@ int main()
 {
     ServicioSocio socio;
     //socio.agregarSocio();
-    socio.verSociosPorId();
+    //socio.verSociosPorId();
     //socio.verSociosPorApellido();
     //socio.verSociosPorDni();
-    //socio.modificarSocio();
+    socio.modificarSocio();
     //
 
     return 0;
 }
-
-

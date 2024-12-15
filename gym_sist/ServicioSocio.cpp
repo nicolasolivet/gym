@@ -255,8 +255,6 @@ void ServicioSocio::listarSocios(Socio* socios, int cantReg)
 
 Socio ServicioSocio::buscarSocio(int idUsuario) 
 {
-
-
 	int pos = _archivoSocio.buscarReg(idUsuario);
 	if (pos == -1)
 	{
@@ -334,16 +332,29 @@ void ServicioSocio::modificarSocio()
 	cout << endl;
 	int idUsuario, opc;
 
+	string nombre;
+	string apellido;
+	int dni;
+	Fecha fechaNacimiento;
+	Fecha fechaIngreso;
+	string contra;
+	string contrasenia;
+	string contrasenia1;
 
 	cout << "  Ingresa un ID: ";
 	cin >> idUsuario;
 	int pos = _archivoSocio.buscarReg(idUsuario);
 
-	if (pos == -2)
+	while (pos < 0)
 	{
 		cout << endl;
-		cout << " | Socio no encontrado, ID incorrecto | " << endl;
-		return;
+		cout << "  +-----------------------------------------+ " << endl;
+		cout << "  |   Socio no encontrado, ID inexistente   | " << endl;
+		cout << "  +-----------------------------------------+ " << endl;
+		system("pause");
+		system("cls");
+		cout << "  Ingresa un ID: ";
+		cin >> idUsuario;
 	}
 
 	Socio socio = _archivoSocio.leerReg(pos);
@@ -357,24 +368,19 @@ void ServicioSocio::modificarSocio()
 		cout << endl;
 
 		cout << string(78, '-') << endl;
-		cout << " 1. Modificar datos del socio" << endl;
-		cout << " 2. Modificar membresia" << endl;
-		cout << " 3. Cambiar rutina" << endl;
-		cout << " 4. Cambiar entrenador designado" << endl;
-		cout << " 5. Cambiar estado de un socio" << endl;
+		cout << " 1. Modificar datos personales" << endl;
+		cout << " 2. Cambiar contrasenia" << endl;
+		cout << " 3. Modificar membresia" << endl;
+		cout << " 4. Cambiar rutina" << endl;
+		cout << " 5. Cambiar entrenador designado" << endl;
+		cout << " 6. Cambiar estado de un socio" << endl;
 		cout << " 0. Volver/Guardar" << endl;
 		cout << string(78, '-') << endl;
 		cout << " Su seleccion: ";
-
-		string nombre;
-		string apellido;
-		int dni;
-		Fecha fechaNacimiento;
-		Fecha fechaIngreso;
-		string contrasenia;
-		string contrasenia1;
-
 		cin >> opc;
+		cout << endl;
+
+		system("cls");
 
 		switch (opc)
 		{
@@ -395,45 +401,61 @@ void ServicioSocio::modificarSocio()
 				fechaNacimiento = Fecha::crearFecha();
 				cout << endl;
 				socio.setFechaNacimiento(fechaNacimiento);
+
+				cout << "  -------------------------------------------" << endl;
+				cout << "        Modificacion realizada con exito.       " << endl;
+				cout << "     Recorda guardar cambios antes de salir. " << endl;
+				cout << "  -------------------------------------------" << endl;
 				
+				break;
+
+			case 2:
+				//cambiar contra
+				cout << endl;
+				contra = socio.getContrasenia();
+				cout << "   Tu contrasenia actual es: " << contra << endl << endl;
+
 				do {
-					cout << "  Contrasenia: ";
+					cout << "   Ingresa la nueva contrasenia: ";
 					cin >> contrasenia;
-					cout << "  Confirma la contrasenia: ";
+					cout << "   Confirma la contrasenia: ";
 					cin >> contrasenia1;
 
 					if (contrasenia != contrasenia1)
 					{
-						cout << "  Las contrasenias no coinciden. Volve a intentarlo.  ";
+						cout << "   Las contrasenias no coinciden. Volve a intentarlo.  ";
 						cout << endl;
 					}
 
 				} while (contrasenia != contrasenia1);
 				socio.setContrasenia(contrasenia);
+
 				break;
 
-			case 2:
+			case 3:
 				// modificar membresia
 				membresiaToStr(socio.getMembresia());
 				socio.setMembresia(seleccionarMembresia());
 				break;
 
-			case 3:
+			case 4:
 				// cambiar rutina
 				break;
 
-			case 4:
+			case 5:
 				// cambiar entrenador designado
 				break;
 
-			case 5:
+			case 6:
 				if (socio.getEstado())
 				{
-					cout << "  Esta seguro de cambiar el estado a Inhabilitado? (S/N): ";
+					cout << endl << endl;
+					cout << "   Esta seguro de cambiar el estado a Inhabilitado? (S/N): ";
 				}
 				else
 				{
-					cout << "  Esta seguro de cambiar el estado a Habilitado? (S/N): ";
+					cout << endl << endl;
+					cout << "   Esta seguro de cambiar el estado a Habilitado? (S/N): ";
 				}
 
 				char confirm;
@@ -447,13 +469,14 @@ void ServicioSocio::modificarSocio()
 					else {
 						socio.setEstado(true);
 					}
-					cout << "  Estado modificado con exito.  " << endl;
+					cout << endl;
+					cout << "   Estado modificado con exito.  " << endl;
 					cout << endl;
 				}
 				else 
 				{
 					cout << endl;
-					cout << "  Cambio de estado cancelado.  " << endl;
+					cout << "   Cambio de estado cancelado.  " << endl;
 				}
 				break;
 
@@ -461,24 +484,36 @@ void ServicioSocio::modificarSocio()
 				break;
 
 			default:
-				cout << "  Error. Selecciona una opcion valida.  " << endl;
+				cout << "   Error. Selecciona una opcion valida.  " << endl;
+				system("pause");
 				break;
 
 			system("pause");
 		}
+
 	} while (opc != 0);
 
-	cout << "  Confirmar Cambios? 1 - SI | 0 - NO" << endl;
-	cout << "  Su eleccion: ";
+	cout << "   Confirmas cambios? 1 - SI | 0 - NO" << endl;
+	cout << "   Su eleccion: ";
 	cin >> opc;
+	system("cls");
+	cout << endl;
 
 	if (opc == 1 && _archivoSocio.modificarReg(socio, pos))
 	{
 		cout << endl;
-		cout << "  Cambios guardados con exito. " << endl;
+		cout << "   +--------------------------------+ " << endl;
+		cout << "   |   Cambios guardados con exito  |" << endl;
+		cout << "   +--------------------------------+ " << endl;
+	}
+	else 
+	{
+		cout << "   +---------------------------------+ " << endl;
+		cout << "   |   Los cambios no se guardaron   |" << endl;
+		cout << "   +---------------------------------+ " << endl;
 	}
 
-	system("pause");
+	//system("pause");
 }
 
 string ServicioSocio::membresiaToStr(int idMemb) 
@@ -487,13 +522,13 @@ string ServicioSocio::membresiaToStr(int idMemb)
 	switch (idMemb)
 	{
 		case 0:
-			membresia = " CORRO MEDIA CUADRA Y NECESITO RESPIRADOR ";
+			membresia = " Corro media cuadra y necesito respirador ";
 			break;
 		case 1:
-			membresia = " ME HAGO UNAS DOMINADAS ";
+			membresia = " Me hago unas dominadas de chill ";
 			break;
 		case 2:
-			membresia = " SOY HIJO DEL SWARZENNEGER ";
+			membresia = " Soy la reencarnacion de Swarzenegger ";
 			break;
 	}
 	return membresia;
@@ -504,9 +539,83 @@ int ServicioSocio::seleccionarMembresia()
 	int opc;
 	do
 	{
-		cout << " Ingrese 0 para 'NO ENTRENO HACE MIL', 1 para 'ME HAGO UNAS DOMINADAS', 2 para 'SOY EL HIJO DEL  SWARZENEGGER' " << endl;
-		cout << " Su seleccion: ";
+		cout << "   Ingrese 0 para 'NO ENTRENO HACE MIL', 1 para 'ME HAGO UNAS DOMINADAS', 2 para 'SOY EL HIJO DEL  SWARZENEGGER' " << endl;
+		cout << "   Su seleccion: ";
 		cin >> opc;
 	} while (opc > 2 || opc < 0);
 	return opc;
+}
+
+
+// metodos habilitados para el usuario
+void ServicioSocio::modificarContrasenia(int idSocio) 
+{
+	//cout << endl;
+	//cout << "   +---------------------------+ " << endl;
+	//cout << "   |   MODIFICAR CONTRASENIA   | " << endl;
+	//cout << "   +---------------------------+ " << endl;
+	int opc;
+	string contra;
+	string contrasenia;
+	string contrasenia1;
+
+	int pos = _archivoSocio.buscarReg(idSocio);
+	Socio socio = _archivoSocio.leerReg(pos);
+
+	cout << endl;
+	contra = socio.getContrasenia();
+	cout << "   Tu contrasenia actual es: " << contra << endl << endl;
+
+	do {
+		cout << "   Ingresa la nueva contrasenia: ";
+		cin >> contrasenia;
+		cout << "   Confirma la contrasenia: ";
+		cin >> contrasenia1;
+
+		if (contrasenia != contrasenia1)
+		{
+			cout << "   Las contrasenias no coinciden. Volve a intentarlo.  ";
+			cout << endl;
+		}
+
+	} while (contrasenia != contrasenia1);
+	socio.setContrasenia(contrasenia);
+	
+	cout << endl;
+	cout << "   Confirmar cambios? 1 - SI | 0 - NO" << endl;
+	cout << "   Su eleccion: ";
+	cin >> opc;
+	system("cls");
+	cout << endl;
+
+	if (opc == 1 && _archivoSocio.modificarReg(socio, pos))
+	{
+		cout << endl;
+		cout << "   +--------------------------------+ " << endl;
+		cout << "   |   Cambios guardados con exito  | " << endl;
+		cout << "   +--------------------------------+ " << endl;
+	}
+	else
+	{
+		cout << "   +---------------------------------+ " << endl;
+		cout << "   |   Los cambios no se guardaron   | " << endl;
+		cout << "   +---------------------------------+ " << endl;
+	}
+}
+
+void verEntrenadorAsignado(int idSocio) 
+{
+
+}
+
+void verHorarios()
+{
+	//horarios son estaticos???
+}
+
+void  ServicioSocio::verMembresia(int idSocio)
+{
+	int pos = _archivoSocio.buscarReg(idSocio);
+	Socio socio = _archivoSocio.leerReg(pos);
+	cout << " Membresia actual: " << membresiaToStr(socio.getMembresia()) << endl;
 }
