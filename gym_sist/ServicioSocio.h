@@ -20,19 +20,19 @@ class ServicioSocio
         
         void modificarSocio();
 
-        //void mostrarTurno(int idTurno);
+        void mostrarTurno(int idTurno); 
         //void mostrarSociosPorEntrenador(int idEntrenador);
 
         std::string membresiaToStr(int idMemb);
         int seleccionarMembresia();
         
-        //void mostrarFechaVencimiento(Fecha fechaIngreso, int idSocio);
-        //bool consultarEstadoDeSocio(int idSocio);
-        //void actualizarEstadoDelSocio(int idSocio, bool estado);
+        void actualizarEstadoDelSocio(int idSocio, bool estado); 
+        //void mostrarFechaVencimiento(Fecha fechaIngreso, int idSocio); //necesito serviciopagos
+        //bool consultarEstadoDeSocio(int idSocio);                      //necesito serviciopagos
         
-        //void verListaDeSociosSinEntrenador();
-        //void verListaDeSociosSinRutina(int idEntrenador);
-        //void asignarUnaRutina(int idEntrenador);
+        //void verListaDeSociosSinEntrenador(); //ncesito empleado
+        //void verListaDeSociosSinRutina(int idEntrenador); //ncesito empleado
+        //void asignarUnaRutina(int idEntrenador); //ncesito empleado
 
         //void generarCSV(Socio socios[], int cantReg);
 

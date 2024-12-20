@@ -3,21 +3,27 @@
 
 class ArchivoPagos
 {
-    private:
-        std::string _nombreArchivo;
-
     public:
         ArchivoPagos();
         ArchivoPagos(std::string nombreArchivo);
-        bool guardarPago(const Pago &p);
-        Pago leerPago(int pos);
-        bool modificarPago(Pago &p, int pos);
-        void leerTodosPagos(Pago *p, int);
-        int getCantidadPagos();
-        int buscarPago(int idUsuario);
+        bool guardarReg(Pago &p);
+        Pago leerReg(int pos);
+        bool modificarReg(Pago &p, int pos);
+        int cantidadRegistros();
+        void leerRegistros(int cantReg, Pago *vpagos); //de la manera en que lo pensamos este metodo no lo terminamos usando.
+        int buscarReg(int idUsuario);
 
         /// filtros por socio
-        int cantidadPagosXSocio(int cantidadRegistros, int idUsuario);
-        int leerPagosXSocio(int cantidadRegistros, int vectPagos[], int tam, int idUsuario);
-        int ultimoPagoSocio(int cantidadRegistros, int idUsuario);
+        int cantidadPagosPorSocio(int cantReg, int idUsuario);
+        int leerPagosPorSocio(int cantReg, int pagosPorSocio[], int idUsuario);
+        int ultimoPagoSocio(int cantReg, int idUsuario);
+
+        void crearPago();
+        void mostrarPago(Pago p);
+        void mostrarPago();
+        void mostrarTodos();
+        void pagosDelSocio();
+
+    private:
+        std::string _nombreArchivo;
 };

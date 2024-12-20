@@ -35,17 +35,15 @@
 //        cin >> pass;
 //
 //        cout << endl;
-//        cout << "+--------------------------------------+" << endl;
-//        cout << "|        Ingresando al sistema...      |" << endl;
-//        cout << "+--------------------------------------+" << endl;
+//        cout << "				Ingresando...         " << endl;
 //        system("pause");
 //
 //        strcpy(_pass, pass.c_str());
 //
 //        usuario = comprobarUsuario(idUsuario, _pass);
 //        contador++;
-//    }
-//    while(contador < 3 && usuario.getIdUsuario() != idUsuario);
+//    
+//    }while(contador < 3 && usuario.getIdUsuario() != idUsuario);
 //
 //    if(contador == 3)
 //    {
@@ -71,9 +69,8 @@
 //
 //Usuario Autenticador::comprobarUsuario(const int idUsuario, const char* pass)
 //{
-//
 //    // abrir archivo empleados leer / buscar / si existe devolver
-//    // abrir archivo soccio leer / buscar / si existe devolver
+//    // abrir archivo socio leer / buscar / si existe devolver
 //
 //    ArchivoEmpleados empleados("archivoEmpleados.dat");
 //    int posEmpleado = empleados.buscarEmpleado(idUsuario);

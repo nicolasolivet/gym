@@ -4,23 +4,23 @@
 
 class ServicioPago
 {
-private:
-    ArchivoPagos _archivoPago;
+    public:
+        ServicioPago();
 
-public:
-    ServicioPago();
+        bool verificarUltimoPago(int idSocio);
+        bool registrarPago(int idSocio, int idMembresia, Fecha periodo);
+        void verPago(int idSocio);
+        void listarTotalPagos();
+        void verPagosPorMes();
+        void verPagosPorAnio();
+        void verIngresosAnuales();
+        void verIngresosMensuales();
 
-    bool verificarUltimoPago(int idSocio);
-    bool registrarPago(int idSocio, int idMembresia, Fecha periodo);
-    void verPago(int idSocio);
-    void listarTotalPagos();
-    void verPagosPorMes();
-    void verPagosPorAnio();
-    void verIngresosAnuales();
-    void verIngresosMensuales();
+        int cantidadDeDiasDelUltimoPago(int idSocio);
+        void mostrarListaDePagosPorTipoDePase();
+        void verIngresosAnualesPorSocios();
 
-    int cantidadDeDiasDelUltimoPago(int idSocio);
-    void mostrarListaDePagosPorTipoDePase();
-    void verIngresosAnualesPorSocios();
+    private:
+        ArchivoPagos _archivoPago;
 };
 

@@ -12,39 +12,39 @@
 
 using namespace std;
 
-MenuPrincipal::MenuPrincipal()
-{
-    ServicioSocio sSocio;
-    Autenticador autenticador;
-    _usuario = autenticador.autenticar();
-}
-
-void MenuPrincipal::mostrarMenuInicio()
-{
-
-    switch(_usuario.getRol())
-    {
-    case 0:
-    {
-        cout << "Menu Gerente" << endl;
-        MenuGerente menuGerente(_usuario);
-        menuGerente.comprobarEstadoDeGerente();
-        break;
-
-    }
-    case 1:
-    {
-        cout << "Menu Entrenador" << endl;
-        MenuEntrenador menuEntrenador(_usuario);
-        menuEntrenador.comprobarEstadoDeEntrenador();
-        break;
-    }
-    case 2:
-    {
-        cout << "Menu Socio" << endl;
-        MenuSocio menuSocio(_usuario);
-        menuSocio.mostrarSubmenuSocio();
-        break;
-    }
-    }
-}
+//MenuPrincipal::MenuPrincipal()
+//{
+//    ServicioSocio servs;
+//    Autenticador autenticador;
+//    _usuario = autenticador.autenticar();
+//}
+//
+//void MenuPrincipal::mostrarMenuInicio()
+//{
+//
+//    switch(_usuario.getRol())
+//    {
+//    case 0:
+//    {
+//        cout << "Menu Gerente" << endl;
+//        MenuGerente menuGerente(_usuario);
+//        menuGerente.comprobarEstadoDeGerente();
+//        break;
+//
+//    }
+//    case 1:
+//    {
+//        cout << "Menu Entrenador" << endl;
+//        MenuEntrenador menuEntrenador(_usuario);
+//        menuEntrenador.comprobarEstadoDeEntrenador();
+//        break;
+//    }
+//    case 2:
+//    {
+//        cout << "Menu Socio" << endl;
+//        MenuSocio menuSocio(_usuario);
+//        menuSocio.mostrarSubmenuSocio();
+//        break;
+//    }
+//    }
+//}

@@ -138,6 +138,8 @@
     <ClCompile Include="Empleado.cpp" />
     <ClCompile Include="Fecha.cpp" />
     <ClCompile Include="gym_sist.cpp" />
+    <ClCompile Include="MenuPrincipal.cpp" />
+    <ClCompile Include="MenuSocio.cpp" />
     <ClCompile Include="Pago.cpp" />
     <ClCompile Include="Reclamo.cpp" />
     <ClCompile Include="Rutina.cpp" />
@@ -158,6 +160,8 @@
     <ClInclude Include="Ejercicio.h" />
     <ClInclude Include="Empleado.h" />
     <ClInclude Include="Fecha.h" />
+    <ClInclude Include="MenuPrincipal.h" />
+    <ClInclude Include="MenuSocio.h" />
     <ClInclude Include="Pago.h" />
     <ClInclude Include="Reclamo.h" />
     <ClInclude Include="Rutina.h" />

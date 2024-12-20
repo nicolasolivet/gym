@@ -7,9 +7,9 @@ class ArchivoSocios
         ArchivoSocios();
         ArchivoSocios(std::string nombreArchivo);
 
-        bool guardarReg(Socio socio);
+        bool guardarReg(Socio &socio);
         Socio leerReg(int posicion);
-        bool modificarReg(Socio socio, int posicion);
+        bool modificarReg(Socio &socio, int posicion);
         int buscarReg(int idSocio);
         int cantidadRegistros();
         void leerRegistros(int cantidadRegistros, Socio *vecSocio);

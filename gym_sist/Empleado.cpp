@@ -3,9 +3,7 @@
 
 using namespace std;
 
-Empleado::Empleado()
-{
-}
+Empleado::Empleado(){}
 
 Empleado::Empleado(string nombre, string apellido, int dni, int idUsuario, Fecha fechaNacimiento, Fecha fechaIngreso, string contrasenia, bool estado, int idRol, int legajo, int idTurno, int idActividadPrincipal, bool* diaSem) : Usuario(nombre, apellido, dni, idUsuario, fechaNacimiento, fechaIngreso, contrasenia, estado, idRol)
 {

@@ -23,15 +23,14 @@ class Fecha
         void validarFecha();
         bool esBisiesto(int anio);
         bool compararSiFechasSonIguales(Fecha fecha);
-
         int diasPorMes(int mes, int anio);
-
 
         Fecha calcularDiasParaVencimiento(Fecha fechaVencimiento);
 
         std::string toString();
 
         static Fecha crearFecha();
+
 
     private:
         int _dia;

@@ -10,7 +10,7 @@ ArchivoSocios::ArchivoSocios(string nombreArchivo)
     _nombreArchivo = nombreArchivo;
 }
 
-bool ArchivoSocios::guardarReg(Socio socio)
+bool ArchivoSocios::guardarReg(Socio &socio)
 {
     bool guardado;
     FILE *pfile;
@@ -37,7 +37,7 @@ Socio ArchivoSocios::leerReg(int posicion)
     return reg;
 }
 
-bool ArchivoSocios::modificarReg(Socio socio, int posicion)
+bool ArchivoSocios::modificarReg(Socio &socio, int posicion)
 {
     bool modificado;
     FILE* pfile;
