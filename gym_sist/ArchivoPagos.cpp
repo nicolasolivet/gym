@@ -112,7 +112,7 @@ void ArchivoPagos::leerRegistros(int cantPagos, Pago* pagos)
 	}
 
 	fclose(pfile);
-}
+} 
 
 
 int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario) //creo que tengo que agregar un vector de pagos por parametro

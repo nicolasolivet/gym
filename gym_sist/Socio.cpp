@@ -6,18 +6,18 @@ using namespace std;
 
 Socio::Socio(){}
 
-Socio::Socio(string nombre, string apellido, int dni, int idUsuario, Fecha fechaNacimiento, Fecha fechaIngreso, string contrasenia, bool estado, int idRol, int idMembresia, string estadoFisico, int idRutina, int idEntrenadorAsignado) : Usuario(nombre, apellido, dni, idUsuario, fechaNacimiento, fechaIngreso, contrasenia, estado, idRol)
+Socio::Socio(string nombre, string apellido, int dni, int idUsuario, Fecha fechaNacimiento, Fecha fechaIngreso, string contrasenia, bool estado, int idRol, int idPase, string estadoFisico, int idRutina, int idEntrenadorAsignado) : Usuario(nombre, apellido, dni, idUsuario, fechaNacimiento, fechaIngreso, contrasenia, estado, idRol)
 {
-    setMembresia(idMembresia);
+    setPase(idPase);
     setEstadoFisico(estadoFisico);
     setIdRutina(idRutina);
     setIdEntrenadorAsignado(idEntrenadorAsignado);
     //setPinIngreso(pinIngreso);
 }
 
-void Socio::setMembresia(int idMembresia)
+void Socio::setPase(int idPase)
 {
-    _idMembresia = idMembresia;
+    _idPase = idPase;
 }
 
 void Socio::setEstadoFisico(string estadoFisico)
@@ -39,9 +39,9 @@ void Socio::setIdEntrenadorAsignado(int idEntrenadorAsignado)
 //    _pinIngreso = pinIngreso;
 //}
 
-int Socio::getMembresia()
+int Socio::getPase()
 {
-    return _idMembresia;
+    return _idPase;
 }
 
 string Socio::getEstadoFisico()
