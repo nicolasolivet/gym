@@ -77,10 +77,6 @@ int Fecha::diasPorMes(int mes, int anio)
 	}
 }
 
-int Fecha::diasPorMes() {
-	int diasPorMeses[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-}
-
 bool Fecha::validarDia()
 {
 	return _dia >= 1 && _dia <= diasPorMes(_mes, _anio);

@@ -23,8 +23,8 @@ class ServicioSocio
         void mostrarTurno(int idTurno); 
         //void mostrarSociosPorEntrenador(int idEntrenador);
 
-        std::string membresiaToStr(int idMemb);
-        int seleccionarMembresia();
+        std::string paseToStr(int idMemb);
+        int seleccionarPase();
         
         void actualizarEstadoDelSocio(int idSocio, bool estado); 
         //void mostrarFechaVencimiento(Fecha fechaIngreso, int idSocio); //necesito serviciopagos

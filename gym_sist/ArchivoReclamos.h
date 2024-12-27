@@ -4,21 +4,19 @@
 class ArchivoReclamos
 {
     public:
-
         ArchivoReclamos();
         ArchivoReclamos(std::string nombreArchivo);
-        bool guardarReclamo(const Reclamo &r);
-        Reclamo leerReclamo(int pos);
-        bool leerTodosReclamos(Reclamo r[], int cant);
-        bool modificarReclamo(Reclamo& r, int pos);
-        int getCantidadReclamos();
-        int buscarReclamo(int pos);
+        bool guardarReg(const Reclamo &r);
+        Reclamo leerReg(int pos);
+        void leerRegistros(Reclamo r[], int cant);
+        bool modificarReg(Reclamo& r, int pos);
+        int cantidadRegistros();
+        int buscarReg(int pos);
 
-        void leerRegistrosReclamo(int cantidadRegistros, Reclamo *vReclamos);
-        int cantidadDeRegistrosPorUsuario(int cantidadRegistros, int idUsuario);
-        int leerRegistrosPorUsuario(int cantidadRegistros, int vectReclamos[], int tam, int idUsuario);
+       
+        int cantidadReclamosPorUsuario(int cantidadRegistros, int idUsuario);
+        int leerReclamosPorUsuario(int cantidadRegistros, int vectReclamos[], int idUsuario);
 
     private:
-
         std::string _nombreArchivo;
 };

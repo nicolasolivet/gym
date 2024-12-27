@@ -1,17 +1,15 @@
 #include <iostream>
 #include <cstring>
-
 #include "Reclamo.h"
-
 using namespace std;
 
 Reclamo::Reclamo(){}
 
-Reclamo::Reclamo(int idReclamo, int idUsuario, bool estaResuelto, string detalle, Fecha fecha)
+Reclamo::Reclamo(int idReclamo, int idUsuario, bool resuelto, string detalle, Fecha fecha)
 {
     setIdReclamo(idReclamo);
     setIdUsuario(idUsuario);
-    setEstaResuelto(estaResuelto);
+    setResuelto(resuelto);
     setDetalle(detalle);
     setFecha(fecha);
 }
@@ -24,9 +22,9 @@ void Reclamo::setIdUsuario(int idUsuario)
 {
     _idUsuario = idUsuario;
 }
-void Reclamo::setEstaResuelto(bool estaResuelto)
+void Reclamo::setResuelto(bool resuelto)
 {
-    _estaResuelto = estaResuelto;
+    _resuelto = resuelto;
 }
 void Reclamo::setDetalle(string detalle)
 {
@@ -45,9 +43,9 @@ int Reclamo::getIdUsuario()
 {
     return _idUsuario;
 }
-bool Reclamo::getEstaResuelto()
+bool Reclamo::getResuelto()
 {
-    return _estaResuelto;
+    return _resuelto;
 }
 string Reclamo::getDetalle()
 {

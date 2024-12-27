@@ -1,23 +1,16 @@
 #include <iostream>
 #include "ServicioSocio.h"
+#include "ServicioPago.h"
 #include "ArchivoPagos.h"
 using namespace std;
 
 int main()
 {
-	ServicioSocio socio;
-	//socio.agregarSocio();
-	//socio.verSociosPorId();
-	//socio.verSociosPorApellido();
-	//socio.verSociosPorDni();
-	//socio.modificarSocio();
-	//socio.verMembresia(1);
+	
 
-	Pago p;
-	ArchivoPagos ap("archivoPago.dat");
-	ap.mostrarPago();
-	//ap.mostrarTodos();
-	//ap.pagosDelSocio();
+
+
+
 
 
 

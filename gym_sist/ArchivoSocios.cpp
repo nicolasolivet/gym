@@ -75,16 +75,15 @@ int ArchivoSocios::buscarReg(int idSocio)
 
 int ArchivoSocios::cantidadRegistros()
 {
-    int cantidad;
     FILE* pfile;
     pfile = fopen(_nombreArchivo.c_str(), "rb");
     if (pfile == nullptr) { return false; }
 
     fseek(pfile, 0, SEEK_END);
-    cantidad = ftell(pfile) / sizeof(Socio);
-
+    int cantReg = ftell(pfile);
     fclose(pfile);
-    return cantidad;
+
+    return cantReg / sizeof(Socio);
 }
 
 void ArchivoSocios::leerRegistros(int cantReg, Socio *socios)

@@ -87,14 +87,13 @@ int ArchivoPagos::buscarReg(int id)
 
 int ArchivoPagos::cantidadRegistros()
 {
-	int cantReg;
 	Pago pago;
 	FILE* pfile;
 	pfile = fopen(_nombreArchivo.c_str(), "rb");
 	if (pfile == nullptr) { return 0; }
 
 	fseek(pfile, 0, SEEK_END);
-	cantReg = ftell(pfile);
+	int cantReg = ftell(pfile);
 	fclose(pfile);
 
 	return cantReg / sizeof(Pago);
@@ -112,7 +111,7 @@ void ArchivoPagos::leerRegistros(int cantPagos, Pago* pagos)
 	}
 
 	fclose(pfile);
-} 
+} // este metodo no lo estoy usando, no lo pensamos para que se use de esta manera 
 
 
 int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario) //creo que tengo que agregar un vector de pagos por parametro
@@ -126,7 +125,7 @@ int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario) //creo que
 
 	for (int i = 0; i < cantPagos; i++)
 	{
-		fread(&pago, sizeof(Pago), 1, pfile); //siempre lee el mismo pago //esto esta mal
+		fread(&pago, sizeof(Pago), 1, pfile); 
 		if (pago.getIdUsuario() == idUsuario)
 		{
 			cont++;

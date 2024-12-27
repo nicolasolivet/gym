@@ -9,16 +9,16 @@ class ServicioPago
 
         bool verificarUltimoPago(int idSocio);
         bool registrarPago(int idSocio, int idMembresia, Fecha periodo);
-        void verPago(int idSocio);
-        void listarTotalPagos();
+        void verPagosPorSocio(int idSocio);
+        //void listarTotalPagos();
         void verPagosPorMes();
         void verPagosPorAnio();
         void verIngresosAnuales();
         void verIngresosMensuales();
+        void verIngresosAnualesPorSocio();
 
-        int cantidadDeDiasDelUltimoPago(int idSocio);
         void mostrarListaDePagosPorTipoDePase();
-        void verIngresosAnualesPorSocios();
+        int cantidadDeDiasDelUltimoPago(int idSocio);
 
     private:
         ArchivoPagos _archivoPago;

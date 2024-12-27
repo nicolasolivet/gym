@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ArchivoReclamos.h"
 
 class ServicioReclamo
@@ -7,14 +6,13 @@ class ServicioReclamo
     public:
         ServicioReclamo();
 
-        void cargarReclamo(int idUsuario);
+        int autoGenerarIdReclamo();
+        void iniciarReclamo(int idUsuario);
         void mostrarReclamo(bool resuelto);
         void verReclamosUsuario(int idUsuario);
         void cambiarEstadoReclamo();
-        int obtenerUltimoIdReclamo();
 
     private:
-
-        ArchivoReclamos _archivoReclamos;
+        ArchivoReclamos _archivoReclamo;
 };
 
