@@ -1,2 +1,37 @@
-﻿  ServicioReclamo.cpp
-  gym_sist.vcxproj -> D:\flacorandom\Desktop\UTN\segundo_cuatri\programacion2\gym\gym\x64\Debug\gym_sist.exe
+﻿  MenuEntrenador.cpp
+  MenuPrincipal.cpp
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,42): error C2665: 'MenuEntrenador::MenuEntrenador': no overloaded function could convert all the argument types
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuEntrenador.h(26,1): message : could be 'MenuEntrenador::MenuEntrenador(MenuEntrenador &&)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,42): message : 'MenuEntrenador::MenuEntrenador(MenuEntrenador &&)': cannot convert argument 1 from 'UsuarioAutenticado' to 'MenuEntrenador &&'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,43): message : Reason: cannot convert from 'UsuarioAutenticado' to 'MenuEntrenador'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,43): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuEntrenador.h(26,1): message : or       'MenuEntrenador::MenuEntrenador(const MenuEntrenador &)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,42): message : 'MenuEntrenador::MenuEntrenador(const MenuEntrenador &)': cannot convert argument 1 from 'UsuarioAutenticado' to 'const MenuEntrenador &'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,43): message : Reason: cannot convert from 'UsuarioAutenticado' to 'const MenuEntrenador'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,43): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,42): message : while trying to match the argument list '(UsuarioAutenticado)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,32): error C2665: 'MenuSocio::MenuSocio': no overloaded function could convert all the argument types
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuSocio.h(36,1): message : could be 'MenuSocio::MenuSocio(MenuSocio &&)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,32): message : 'MenuSocio::MenuSocio(MenuSocio &&)': cannot convert argument 1 from 'UsuarioAutenticado' to 'MenuSocio &&'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,33): message : Reason: cannot convert from 'UsuarioAutenticado' to 'MenuSocio'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,33): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuSocio.h(36,1): message : or       'MenuSocio::MenuSocio(const MenuSocio &)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,32): message : 'MenuSocio::MenuSocio(const MenuSocio &)': cannot convert argument 1 from 'UsuarioAutenticado' to 'const MenuSocio &'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,33): message : Reason: cannot convert from 'UsuarioAutenticado' to 'const MenuSocio'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,33): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(39,32): message : while trying to match the argument list '(UsuarioAutenticado)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(31,9): error C2360: initialization of 'menuGerente' is skipped by 'case' label
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(27,25): message : see declaration of 'menuGerente'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(37,9): error C2360: initialization of 'menuEntrenador' is skipped by 'case' label
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(33,28): message : see declaration of 'menuEntrenador'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(37,9): error C2360: initialization of 'menuGerente' is skipped by 'case' label
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\MenuPrincipal.cpp(27,25): message : see declaration of 'menuGerente'
+  ServicioEmpleado.cpp
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ServicioEmpleado.cpp(773,30): error C2660: 'ArchivoEmpleados::empleadosActivos': function does not take 4 arguments
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ArchivoEmpleados.h(20,13): message : see declaration of 'ArchivoEmpleados::empleadosActivos'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ServicioEmpleado.cpp(773,30): message : while trying to match the argument list '(int, int *, int, int)'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ServicioEmpleado.cpp(907,32): error C2660: 'ArchivoEmpleados::empleadosActivos': function does not take 4 arguments
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ArchivoEmpleados.h(20,13): message : see declaration of 'ArchivoEmpleados::empleadosActivos'
+C:\Users\RNDM\Desktop\practicas\gym\gym\gym_sist\ServicioEmpleado.cpp(907,32): message : while trying to match the argument list '(int, int *, int, int)'
+  ServicioRutina.cpp
+  Generating Code...

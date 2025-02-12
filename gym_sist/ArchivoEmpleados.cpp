@@ -3,204 +3,153 @@
 
 using namespace std;
 
-ArchivoEmpleados::ArchivoEmpleados(){}
+ArchivoEmpleados::ArchivoEmpleados() {}
 
 ArchivoEmpleados::ArchivoEmpleados(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+	archivoEmpleados = nombreArchivo;
 }
 
-bool ArchivoEmpleados::guardarEmpleado(Empleado empleado)
+bool ArchivoEmpleados::guardarReg(Empleado empleado)
 {
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "ab");
+	if (pfile == nullptr) { return false; }
 
-    bool guardo;
-    FILE *pArchivo;
+	bool guardado = fwrite(&empleado, sizeof(Empleado), 1, pfile);
+	fclose(pfile);
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "ab");
-
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    guardo = fwrite(&empleado, sizeof(Empleado), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
-
+	return guardado;
 }
 
-bool ArchivoEmpleados::guardarEmpleado(Empleado empleado, int posicion)
+bool ArchivoEmpleados::modificarReg(Empleado empleado, int posicion)
 {
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb+");
+	if (pfile == nullptr) { return false; }
 
-    bool guardo;
-    FILE *pArchivo;
+	fseek(pfile, sizeof(Empleado) * posicion, SEEK_SET);
+	bool modificado = fwrite(&empleado, sizeof(Empleado), 1, pfile);
+	fclose(pfile);
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb+");
-
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    fseek(pArchivo, sizeof(Empleado) * posicion, SEEK_SET);
-
-    guardo = fwrite(&empleado, sizeof(Empleado), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
-
+	return modificado;
 }
 
-int ArchivoEmpleados::buscarEmpleado(int idEmpleado)
+Empleado ArchivoEmpleados::leerReg(int posicion)
 {
-    int posicion = 0;
+	Empleado empleado;
 
-    Empleado empleado;
-    FILE *pArchivo;
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
+	if (pfile == nullptr) { return Empleado(); }
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
+	fseek(pfile, sizeof(Empleado) * posicion, SEEK_SET);
+	fread(&empleado, sizeof(Empleado), 1, pfile);
+	fclose(pfile);
 
-    while(fread(&empleado, sizeof(Empleado), 1, pArchivo))
-    {
-        if(empleado.getIdUsuario() == idEmpleado)
-        {
-            fclose(pArchivo);
-            return posicion;
-        }
-        posicion++;
-    }
-
-    fclose(pArchivo);
-
-    return -1;
+	return empleado;
 }
 
-Empleado ArchivoEmpleados::leerRegistroEmpleado(int posicion)
+int ArchivoEmpleados::cantidadRegistros()
 {
-    Empleado empleado;
+	int cantidad;
 
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	fseek(pfile, 0, SEEK_END);
+	cantidad = ftell(pfile) / sizeof(Empleado);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return Empleado();
-    }
-
-    fseek(pArchivo, sizeof(Empleado) * posicion, SEEK_SET);
-
-    fread(&empleado, sizeof(Empleado), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return empleado;
-
+	return cantidad;
 }
 
-int ArchivoEmpleados::cantidadRegistrosEmpleados()
+void ArchivoEmpleados::leerRegistros(int cantidadRegistros, Empleado* vectEmpleado)
 {
-    int cantidad;
+	FILE* pfile;
 
-    FILE *pArchivo;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	if (pfile == nullptr)
+	{
+		return;
+	}
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&vectEmpleado[i], sizeof(Empleado), 1, pfile);
+	}
 
-    fseek(pArchivo, 0, SEEK_END);
-
-    cantidad = ftell(pArchivo) / sizeof(Empleado);
-
-    fclose(pArchivo);
-
-    return cantidad;
-
+	fclose(pfile);
 }
 
-void ArchivoEmpleados::leerRegistrosEmpleados(int cantidadRegistros, Empleado *vectEmpleado)
+int ArchivoEmpleados::buscarReg(int idEmpleado)
 {
-    FILE *pArchivo;
+	int posicion = 0;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	Empleado empleado;
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
+	if (pfile == nullptr) { return -2; }
 
-    if(pArchivo == nullptr)
-    {
-        return;
-    }
+	while (fread(&empleado, sizeof(Empleado), 1, pfile))
+	{
+		if (empleado.getIdUsuario() == idEmpleado)
+		{
+			fclose(pfile);
+			return posicion;
+		}
+		posicion++;
+	}
+	fclose(pfile);
 
-    for(int i = 0; i < cantidadRegistros; i++)
-    {
-        fread(&vectEmpleado[i], sizeof(Empleado), 1, pArchivo);
-    }
-
-    fclose(pArchivo);
+	return -1;
 }
 
-int ArchivoEmpleados::cantidadRegistrosEmpleadosPorEstado(int cantidadRegistros, bool estado, int idRol)
+
+int ArchivoEmpleados::cantidadEmpleadosPorEstado(int cantidadRegistros, bool estado, int idRol)
 {
-    int contador  = 0;
-    Empleado empleado;
+	int contador = 0;
+	Empleado empleado;
 
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&empleado, sizeof(Empleado), 1, pfile);
+		if (empleado.getIdRol() == idRol && empleado.getEstado() == estado)
+		{
+			contador++;
+		}
+	}
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    for(int i = 0; i < cantidadRegistros; i++)
-    {
-        fread(&empleado, sizeof(Empleado), 1, pArchivo);
-        if(empleado.getIdRol() == idRol && empleado.getEstado() == estado)
-        {
-            contador++;
-        }
-    }
-
-    fclose(pArchivo);
-
-    return contador;
+	return contador;
 }
 
-int ArchivoEmpleados::leerRegistrosEmpleadosActivos(int cantidadRegistros, int vectEmpleados[], int tam, int idRol)
+int ArchivoEmpleados::empleadosActivos(int cantReg, int empleados[], int idRol)
 {
-    int cont = 0, indice = 0;
-    FILE *pArchivo;
+	int indice = 0;
+	Empleado empleado;
 
-    Empleado empleado;
+	FILE* pfile;
+	pfile = fopen(archivoEmpleados.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    for(int i=0; i<cantidadRegistros; i++)
-    {
-        fread(&empleado, sizeof(Empleado), 1, pArchivo);
-        if(empleado.getIdRol() == idRol && empleado.getEstado())
-        {
-            vectEmpleados[indice] = i;
-            indice++;
-        }
-    }
-
-    fclose(pArchivo);
-
-    return *vectEmpleados;
+	for (int i = 0; i < cantReg; i++)
+	{
+		fread(&empleado, sizeof(Empleado), 1, pfile);
+		if (empleado.getIdRol() == idRol && empleado.getEstado() == true)
+		{
+			empleados[indice] = i;
+			indice++;
+		}
+	}
+	fclose(pfile);
+	
+	return *empleados;
 }
 

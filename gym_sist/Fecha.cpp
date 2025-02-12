@@ -18,50 +18,48 @@ Fecha::Fecha(int d, int m, int a)
 	validarFecha();
 }
 
-void Fecha::setDia(int d)
-{
-	_dia = d;
-}
-
-void Fecha::setMes(int m)
-{
-	_mes = m;
-}
-
-void Fecha::setAnio(int a)
-{
-	_anio = a;
-}
-
-int Fecha::getDia() const { return _dia; }
-
-int Fecha::getMes() const { return _mes; }
-
-int Fecha::getAnio() const { return _anio; }
-
-
-void Fecha::setFechaDefecto()
-{
-	_dia = 1;
-	_mes = 1;
-	_anio = 1;
-
-	cout << _dia << _mes << _anio << endl;
-}
-
 void Fecha::establecerFechaActual()
 {
 	time_t timestamp = time(0);
 
-	tm* diaActual = localtime(&timestamp);
+	tm* fechaActual = localtime(&timestamp);
 
-	_dia = diaActual->tm_mday;
+	dia = fechaActual->tm_mday;
 
-	_mes = diaActual->tm_mon + 1;
+	mes = fechaActual->tm_mon + 1;
 
-	_anio = diaActual->tm_year + 1900;
+	anio = fechaActual->tm_year + 1900;
 }
 
+void Fecha::setDia(int d)
+{
+	dia = d;
+}
+
+void Fecha::setMes(int m)
+{
+	mes = m;
+}
+
+void Fecha::setAnio(int a)
+{
+	anio = a;
+}
+
+int Fecha::getDia() const { return dia; }
+
+int Fecha::getMes() const { return mes; }
+
+int Fecha::getAnio() const { return anio; }
+
+void Fecha::setFechaDefecto()
+{
+	dia = 1;
+	mes = 1;
+	anio = 1;
+
+	cout << dia << mes << anio << endl;
+}
 
 int Fecha::diasPorMes(int mes, int anio)
 {
@@ -79,17 +77,17 @@ int Fecha::diasPorMes(int mes, int anio)
 
 bool Fecha::validarDia()
 {
-	return _dia >= 1 && _dia <= diasPorMes(_mes, _anio);
+	return dia >= 1 && dia <= diasPorMes(mes, anio);
 }
 
 bool Fecha::validarMes()
 {
-	return _mes > 0 && _mes <= 12;
+	return mes > 0 && mes <= 12;
 }
 
 bool Fecha::validarAnio()
 {
-	return _anio > 0;
+	return anio > 0;
 }
 
 void Fecha::validarFecha()
@@ -107,12 +105,12 @@ bool Fecha::esBisiesto(int anio)
 
 string Fecha::toString()
 {
-	return std::to_string(_dia) + "/" + std::to_string(_mes) + "/" + std::to_string(_anio);
+	return std::to_string(dia) + "/" + std::to_string(mes) + "/" + std::to_string(anio);
 }
 
 bool Fecha::compararSiFechasSonIguales(Fecha fecha)
 {
-	if (_anio == fecha.getAnio() && _mes == fecha.getMes() && _dia == fecha.getDia())
+	if (anio == fecha.getAnio() && mes == fecha.getMes() && dia == fecha.getDia())
 	{
 		return true;
 	}
@@ -126,10 +124,8 @@ Fecha Fecha::calcularDiasParaVencimiento(Fecha fechaVencimiento)
 
 	while (dia > diasPorMes(mes, anio))
 	{
-
 		dia -= diasPorMes(mes, anio);
 		mes++;
-
 
 		if (mes > 12)
 		{
@@ -137,7 +133,6 @@ Fecha Fecha::calcularDiasParaVencimiento(Fecha fechaVencimiento)
 			anio++;
 		}
 	}
-
 	return Fecha(dia, mes, anio);
 }
 

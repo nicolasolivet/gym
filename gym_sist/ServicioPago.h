@@ -21,6 +21,6 @@ class ServicioPago
         int cantidadDeDiasDelUltimoPago(int idSocio);
 
     private:
-        ArchivoPagos _archivoPago;
+        ArchivoPagos archivoPagos;
 };
 

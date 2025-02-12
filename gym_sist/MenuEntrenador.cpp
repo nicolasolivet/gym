@@ -1,28 +1,18 @@
 #include <iostream>
-
 #include "MenuEntrenador.h"
-#include "ServicioEmpleado.h"
-#include "ServicioSocio.h"
-#include "ServicioReclamo.h"
-#include "ServicioEjercicio.h"
-#include "ServicioRutina.h"
-
 using namespace std;
 
-
-MenuEntrenador::MenuEntrenador(UsuarioAutenticado usuario) : _usuario(usuario) {}
+MenuEntrenador::MenuEntrenador(UsuarioAutenticado usuario) : usuario(usuario) {}
 
 void MenuEntrenador::comprobarEstadoDeEntrenador()
 {
     system("cls");
-    if(!_usuario.estaHabilitado())
+    if(!usuario.getEstado())
     {
-        cout << "+--------------------------------------------------------------+" << endl;
-        cout << "| Actualmente no se encuentra habilitado para ingresar al Menu |" << endl;
-        cout << "|   Comuniquese con un gerente para regularizar su estado.     |" << endl;
-        cout << "|                                                              |" << endl;
-        cout << "|                   EQUIPO DE METALGYM                         |" << endl;
-        cout << "+--------------------------------------------------------------+" << endl;
+        cout << "+--------------------------------------------------------------------+" << endl;
+        cout << "|   Actualmente no se encuentra habilitado/a para ingresar al Menu   |" << endl;
+        cout << "|                   comunicate con tu gerente                        |" << endl;
+        cout << "+--------------------------------------------------------------------+" << endl;
         return;
     }
 
@@ -32,25 +22,22 @@ void MenuEntrenador::comprobarEstadoDeEntrenador()
 void MenuEntrenador::mostrarMenuEntrenador()
 {
     int opcion;
-    ServicioEmpleado entrenador;
-
-
     do
     {
         system("cls");
-        cout << "  ENTRENADOR: #" << _usuario.getIdUsuario() << endl;
-        cout << "+-----------------------------+" << endl;
-        cout << "|        MENU ENTRENADOR      |" << endl;
-        cout << "+-----------------------------+" << endl;
-        cout << "| 1 - HORARIOS Y SOCIOS       |" << endl;
-        cout << "| 2 - RUTINAS Y EJERCICIOS    |" << endl;
-        cout << "| 3 - RECLAMOS                |" << endl;
-        cout << "| 4 - CAMBIAR CONTRASENIA     |" << endl;
-        cout << "+-----------------------------+" << endl;
-        cout << "| 0 - SALIR                   |" << endl;
-        cout << "+-----------------------------+" << endl;
+        cout << "          ENTRENADOR: #" << usuario.getIdUsuario() << endl;
+        cout << "   +-------------------------------+" << endl;
+        cout << "   |        MENU ENTRENADOR        |" << endl;
+        cout << "   +-------------------------------+" << endl;
+        cout << "   |   [1]  HORARIOS Y SOCIOS      |" << endl;
+        cout << "   |   [2]  RUTINAS Y servEjercicioS   |" << endl;
+        cout << "   |   [3]  RECLAMOS               |" << endl;
+        cout << "   |   [4]  CAMBIAR CONTRASENIA    |" << endl;
+        cout << "   +-------------------------------+" << endl;
+        cout << "   |   [0]  SALIR                  |" << endl;
+        cout << "   +-------------------------------+" << endl;
         cout << endl;
-        cout << " Su seleccion: ";
+        cout << " Elegiste: ";
         cin >> opcion;
 
         system("cls");
@@ -66,12 +53,12 @@ void MenuEntrenador::mostrarMenuEntrenador()
             verReclamos();
             break;
         case 4:
-            entrenador.modificarContrasenia(_usuario.getIdUsuario());
+            servEmpleado.modificarContrasenia(usuario.getIdUsuario());
             break;
         case 0:
             break;
         default:
-            cout << "Opcion incorrecta" << endl;
+            cout << "  Pifiaste, volve a probar" << endl;
             break;
         }
 
@@ -82,25 +69,24 @@ void MenuEntrenador::mostrarMenuEntrenador()
 
 void MenuEntrenador::verHorariosYSociosAsignados()
 {
-    ServicioEmpleado entrenador;
-    ServicioSocio socio;
     int opcion;
+    ServicioSocio servSocio;
 
     do
     {
         system("cls");
-        cout << "+-------------------------------------+" << endl;
-        cout << "|           HORARIOS Y SOCIOS         |" << endl;
-        cout << "+-------------------------------------+" << endl;
-        cout << "| 1 - VER HORARIOS ASIGNADOS          |" << endl;
-        cout << "| 2 - VER SOCIOS ASIGNADOS            |" << endl;
-        cout << "| 3 - VER SOCIOS SIN RUTINA ASIGNADA  |" << endl;
-        cout << "| 4 - ASIGNAR UNA RUTINA              |" << endl;
-        cout << "+-------------------------------------+" << endl;
-        cout << "| 0 - VOLVER ATRAS                    |" << endl;
-        cout << "+-------------------------------------+" << endl;
+        cout << "      +-----------------------------------------+" << endl;
+        cout << "      |           HORARIOS Y SOCIOS             | " << endl;
+        cout << "      +-----------------------------------------+" << endl;
+        cout << "      |   [1]  VER HORARIOS ASIGNADOS           |" << endl;
+        cout << "      |   [2]  VER SOCIOS ASIGNADOS             |" << endl;
+        cout << "      |   [3]  VER SOCIOS SIN RUTINA ASIGNADA   |" << endl;
+        cout << "      |   [4]  ASIGNAR UNA RUTINA               |" << endl;
+        cout << "      +-----------------------------------------+" << endl;
+        cout << "      |   [0]  VOLVER ATRAS                     |" << endl;
+        cout << "      +-----------------------------------------+" << endl;
         cout << endl;
-        cout << " Su seleccion: ";
+        cout << " Elegiste: ";
         cin >> opcion;
 
 
@@ -108,21 +94,21 @@ void MenuEntrenador::verHorariosYSociosAsignados()
         switch(opcion)
         {
         case 1:
-            entrenador.verHorariosAsignados(_usuario.getIdUsuario());
+            servEmpleado.verHorariosAsignados(usuario.getIdUsuario());
             break;
         case 2:
-            entrenador.verSociosAsignados(_usuario.getIdUsuario());
+            servEmpleado.verSociosAsignados(usuario.getIdUsuario());
             break;
         case 3:
-            socio.verListaDeSociosSinRutina(_usuario.getIdUsuario());
+            servSocio.listarSociosSinRutina(usuario.getIdUsuario());
             break;
         case 4:
-            socio.asignarUnaRutina(_usuario.getIdUsuario());
+            servSocio.asignarRutina(usuario.getIdUsuario());
             break;
         case 0:
             break;
         default:
-            cout << "Opcion incorrecta" << endl;
+            cout << "  Pifiaste, volve a probar" << endl;
             system("pause");
             break;
         }
@@ -134,29 +120,28 @@ void MenuEntrenador::verHorariosYSociosAsignados()
 
 void MenuEntrenador::crearModificarRutina()
 {
-    ServicioEjercicio ejercicio;
-    ServicioRutina rutina;
+    
     int opcion;
 
     do
     {
         system("cls");
-        cout << "+--------------------------------------+" << endl;
-        cout << "|               RUTINAS                |" << endl;
-        cout << "+--------------------------------------+" << endl;
-        cout << "| 1 - VER MIS RUTINAS                  |" << endl;
-        cout << "| 2 - VER DETALLES RUTINAS             |" << endl;
-        cout << "| 3 - CREAR UNA RUTINA                 |" << endl;
-        cout << "| 4 - BUSCAR UNA RUTINA                |" << endl;
-        cout << "| 5 - MODIFICAR UNA RUTINA             |" << endl;
-        cout << "| 6 - VER EJERCICIOS                   |" << endl;
-        cout << "| 7 - AGREGAR UN EJERCICIO             |" << endl;
-        cout << "| 8 - MODIFICAR UN EJERCICIO           |" << endl;
-        cout << "+--------------------------------------+" << endl;
-        cout << "| 0 - VOLVER ATRAS                     |" << endl;
-        cout << "+--------------------------------------+" << endl;
+        cout << "      +--------------------------------------+" << endl;
+        cout << "      |               RUTINAS                |" << endl;
+        cout << "      +--------------------------------------+" << endl;
+        cout << "      |   [1]  VER MIS RUTINAS               |" << endl;
+        cout << "      |   [2]  VER DETALLE DE RUTINAS        |" << endl;
+        cout << "      |   [3]  CREAR UNA RUTINA              |" << endl;
+        cout << "      |   [4]  BUSCAR UNA RUTINA             |" << endl;
+        cout << "      |   [5]  MODIFICAR UNA RUTINA          |" << endl;
+        cout << "      |   [6]  VER servEjercicioS                |" << endl;
+        cout << "      |   [7]  AGREGAR UN servEjercicio          |" << endl;
+        cout << "      |   [8]  MODIFICAR UN servEjercicio        |" << endl;
+        cout << "      +--------------------------------------+" << endl;
+        cout << "      |   [0]  VOLVER ATRAS                  |" << endl;
+        cout << "      +--------------------------------------+" << endl;
         cout << endl;
-        cout << " Su seleccion: ";
+        cout << " Elegiste: ";
         cin >> opcion;
 
 
@@ -164,40 +149,38 @@ void MenuEntrenador::crearModificarRutina()
         switch(opcion)
         {
         case 1:
-            rutina.verRutinas(_usuario.getIdUsuario());
+            servRutina.verRutinasEntrenador(usuario.getIdUsuario());
             break;
         case 2:
-            rutina.verDetallesDeRutina();
+            servRutina.verDetalleRutina();
             break;
         case 3:
-            rutina.crearRutina(_usuario.getIdUsuario());
+            servRutina.crearRutina(usuario.getIdUsuario());
             break;
         case 4:
-            rutina.buscarRutina();
+            servRutina.buscarRutina();
             break;
         case 5:
-            rutina.mostrarOpcionesModificarRutina(_usuario.getIdUsuario());
+            servRutina.menuModificarRutina_Detalle(usuario.getIdUsuario());
             break;
         case 6:
-            ejercicio.verEjercicios();
+            servEjercicio.verEjercicios();
             break;
         case 7:
-            ejercicio.agregarEjercicio();
+            servEjercicio.agregarEjercicio();
             break;
         case 8:
-            ejercicio.modificarEjercicio();
+            servEjercicio.modificarEjercicio();
             break;
         case 0:
             break;
         default:
-            cout << "Opcion incorrecta" << endl;
+            cout << "  Pifiaste rey, volvea probar" << endl;
             system("pause");
             break;
         }
-
     }
     while(opcion != 0);
-
 }
 
 void MenuEntrenador::verReclamos()
@@ -208,16 +191,16 @@ void MenuEntrenador::verReclamos()
     do
     {
         system("cls");
-        cout << "+-----------------------------------+" << endl;
-        cout << "|              RECLAMOS             |" << endl;
-        cout << "+-----------------------------------+" << endl;
-        cout << "| 1 - REALIZAR UN RECLAMO           |" << endl;
-        cout << "| 2 - VER ESTADO DE RECLAMOS        |" << endl;
-        cout << "+-----------------------------------+" << endl;
-        cout << "| 0 - VOLVER ATRAS                  |" << endl;
-        cout << "+-----------------------------------+" << endl;
+        cout << "      +-----------------------------------+" << endl;
+        cout << "      |              RECLAMOS             |" << endl;
+        cout << "      +-----------------------------------+" << endl;
+        cout << "      |   [1]  REALIZAR UN RECLAMO        |" << endl;
+        cout << "      |   [2]  VER ESTADO DE RECLAMOS     |" << endl;
+        cout << "      +-----------------------------------+" << endl;
+        cout << "      |   [0]  VOLVER ATRAS               |" << endl;
+        cout << "      +-----------------------------------+" << endl;
         cout << endl;
-        cout << " Su seleccion: ";
+        cout << " Elegiste: ";
         cin >> opcion;
 
 
@@ -225,20 +208,18 @@ void MenuEntrenador::verReclamos()
         switch(opcion)
         {
         case 1:
-            reclamo.cargarReclamo(_usuario.getIdUsuario());
+            servReclamo.iniciarReclamo(usuario.getIdUsuario());
             break;
         case 2:
-            reclamo.verReclamosUsuario(_usuario.getIdUsuario());
+            servReclamo.verReclamosUsuario(usuario.getIdUsuario());
             break;
         case 0:
             break;
         default:
-            cout << "Opcion incorrecta" << endl;
+            cout << "  Pifiaste rey, volvea probar" << endl;
             system("pause");
             break;
         }
-
     }
     while(opcion != 0);
-
 }

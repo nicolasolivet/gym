@@ -31,10 +31,9 @@ class Fecha
 
         static Fecha crearFecha();
 
-
     private:
-        int _dia;
-        int _mes;
-        int _anio;
+        int dia;
+        int mes;
+        int anio;
 
 };

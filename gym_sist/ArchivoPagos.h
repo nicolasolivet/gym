@@ -6,11 +6,12 @@ class ArchivoPagos
     public:
         ArchivoPagos();
         ArchivoPagos(std::string nombreArchivo);
+
         bool guardarReg(Pago &p);
-        Pago leerReg(int pos);
         bool modificarReg(Pago &p, int pos);
+        Pago leerReg(int pos);
         int cantidadRegistros();
-        void leerRegistros(int cantReg, Pago *vpagos); //de la manera en que lo pensamos este metodo no lo terminamos usando.
+        void leerRegistros(int cantReg, Pago *pagos); //de la manera en que lo pensamos este metodo no lo terminamos usando.
         int buscarReg(int idUsuario);
 
         /// filtros por socio
@@ -18,6 +19,7 @@ class ArchivoPagos
         int leerPagosPorSocio(int cantReg, int pagosPorSocio[], int idUsuario);
         int ultimoPagoSocio(int cantReg, int idUsuario);
 
+        /// metodos de prueba, descartar
         void crearPago();
         void mostrarPago(Pago p);
         void mostrarPago();
@@ -25,5 +27,5 @@ class ArchivoPagos
         void pagosDelSocio();
 
     private:
-        std::string _nombreArchivo;
+        std::string _archivoPagos;
 };

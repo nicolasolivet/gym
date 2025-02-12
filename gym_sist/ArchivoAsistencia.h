@@ -7,14 +7,13 @@ class ArchivoAsistencia
         ArchivoAsistencia();
         ArchivoAsistencia(std::string nombreArchivo);
 
-        bool guardarAsistencia(Asistencia Asistencia);
-        bool guardarAsistencia(Asistencia Asistencia, int posicion);
-        int buscarAsistencia(int idSocio);
-        Asistencia leerRegistroAsistencia(int posicion);
-        int cantidadRegistrosAsistencias();
-        void leerRegistrosAsistencia(int cantidadRegistros, Asistencia *vecAsistencia);
+        bool guardarReg(Asistencia Asistencia);
+        bool modificarReg(Asistencia Asistencia, int posicion);
+        Asistencia leerReg(int posicion);
+        int cantidadRegistros();
+        void leerRegistros(int cantidadRegistros, Asistencia *vecAsistencia);
+        int buscarReg(int idSocio);
 
     private:
-        std::string _nombreArchivo;
-
+        std::string archivoAsistencia;
 };

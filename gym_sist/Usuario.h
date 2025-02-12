@@ -28,14 +28,14 @@ class Usuario
         bool getEstado() const;
 
     protected:
-        int _idUsuario;
-        char _nombre[50];
-        char _apellido[50];
-        int _dni;
-        int _idRol;
-        char _contrasenia[50];
-        Fecha _fechaIngreso;
-        Fecha _fechaNacimiento;
-        bool _estado;
+        int idUsuario;
+        char nombre[50];
+        char apellido[50];
+        int dni;
+        int idRol;
+        char contrasenia[50];
+        Fecha fechaIngreso;
+        Fecha fechaNacimiento;
+        bool estado;
 };
 

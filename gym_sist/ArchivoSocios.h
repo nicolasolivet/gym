@@ -10,10 +10,10 @@ class ArchivoSocios
         bool guardarReg(Socio &socio);
         Socio leerReg(int posicion);
         bool modificarReg(Socio &socio, int posicion);
-        int buscarReg(int idSocio);
         int cantidadRegistros();
         void leerRegistros(int cantidadRegistros, Socio *vecSocio);
+        int buscarReg(int idSocio);
 
     private:
-        std::string _nombreArchivo;
+        std::string _archivoSocios;
 };

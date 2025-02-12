@@ -1,1020 +1,979 @@
 #include <iostream>
-#include <cstring>
+#include <string>
 #include <iomanip>
-
-
 #include "ServicioEmpleado.h"
 #include "ServicioSocio.h"
 #include "ServicioActividad.h"
-
 using namespace std;
-
 
 ServicioEmpleado::ServicioEmpleado()
 {
-    _archivoEmpleado = GestionArchivoEmpleados("archivoEmpleados.dat");
+	archivoEmpleado = ArchivoEmpleados("archivoEmpleados.dat");
+}
+
+int ServicioEmpleado::chequearExistenciaEmpleado(int dni)
+{
+	int cantEmp = archivoEmpleado.cantidadRegistros();
+	Empleado empleado;
+
+	if (cantEmp > 0)
+	{
+		for (int i = 0; i < cantEmp; i++)
+		{
+			empleado = archivoEmpleado.leerReg(i);
+			if (empleado.getDni() == dni)
+			{
+				return empleado.getIdUsuario();
+			}
+		}
+	}
+	return -1;
+}
+
+int ServicioEmpleado::generarIdEmpleado()
+{
+	ServicioSocio socio;
+	return socio.generarId();
+}
+
+void ServicioEmpleado::agregarEmpleado(int idRol)
+{
+	ServicioActividad servActi;
+
+	string nombre, apellido, pass1, pass2;
+	int dni, opcion;
+	int dia, mes, anio;
+	int idTurno, idActividadPrincipal = 0;
+	Fecha fechaIngreso;
+	bool estado = true;
+	bool semana[7] = {};
+
+	system("cls");
+	cout << "		+-------------------------------------------+" << endl;
+	cout << "		|         INGRESO DE DATOS PERSONALES		|" << endl;
+	cout << "		+-------------------------------------------+" << endl;
+	cout << endl;
+	cout << " DNI: ";
+	cin >> dni;
+
+	if (chequearExistenciaEmpleado(dni) != 1)
+	{
+		cout << "  +------------------------------------------------------+" << endl;
+		cout << "  |   El DNI ingresado ya existe. ID usuario" << chequearExistenciaEmpleado(dni) << endl;
+		cout << "  +------------------------------------------------------+" << endl;
+		return;
+	}
+
+	cout << "  Ahora te pediremos los datos del nuevo empleado" << endl;
+
+	system("cls");
+	cout << " Nombre: ";
+	cin >> nombre;
+	cout << " Apellido: ";
+	cin >> apellido;
+
+	system("cls");
+	cout << "	+-----------------------+" << endl;
+	cout << "	|  FECHA DE NACIMIENTO  |" << endl;
+	cout << "	+-----------------------+" << endl;
+	cout << endl;
+	cout << " Dia: ";
+	cin >> dia;
+	cout << " Mes: ";
+	cin >> mes;
+	cout << " Anio: ";
+	cin >> anio;
+
+	Fecha fechaNacimiento(dia, mes, anio);
+
+	do
+	{
+		system("cls");
+		cout << "	+----------------------+" << endl;
+		cout << "	|      CONTRASENIA     |" << endl;
+		cout << "	+----------------------+" << endl;
+		cout << endl;
+		cout << " Ingresa contrasenia: ";
+		cin >> pass1;
+		cout << " Confirma la contrasenia: ";
+		cin >> pass2;
+
+		if (strcmp(pass1.c_str(), pass2.c_str()) != 0)
+		{
+			cout << " Contrasenias no coinciden, proba de nuevo" << endl;
+			system("pause");
+		}
+
+	} while (strcmp(pass1.c_str(), pass2.c_str()) != 0);
+
+	system("cls");
+	cout << "	+------------------------+" << endl;
+	cout << "	|      TURNO LABORAL     |" << endl;
+	cout << "	+------------------------+" << endl;
+	cout << endl;
+	cout << " [0] 8hs a 13hs " << endl;
+	cout << " [1] 13hs a 18hs " << endl;
+	cout << " [2] 18hs a 23hs " << endl;
+	cout << endl;
+	cout << " Opcion elegida: ";
+	cin >> idTurno;
+
+	if (idRol == 1)
+	{
+		system("cls");
+		cout << "+---------------------------------+" << endl;
+		cout << "|            ACTIVIDAD            |" << endl;
+		cout << "+---------------------------------+" << endl;
+		cout << endl;
+		cout << " [1] Ver actividades disponibles " << endl;
+		cout << " [2] Agregar nueva actividad " << endl;
+		cout << endl;
+		cout << " Opcion elegida: ";
+		cin >> opcion;
+		if (opcion == 1)
+		{
+			servActi.listarActividades();
+			cout << endl;
+			cout << " Ingrese ID actividad principal: ";
+			cin >> idActividadPrincipal;
+		}
+		else
+		{
+			servActi.agregarActividad();
+		}
+	}
+
+	int idEmpleado = generarIdEmpleado();
+
+	Empleado empleado(nombre, apellido, dni, idEmpleado, fechaNacimiento, fechaIngreso, pass1, estado, idRol, idTurno, idActividadPrincipal, semana);
+
+	if (archivoEmpleado.guardarReg(empleado))
+	{
+		cout << "	+-------------------------------------+" << endl;
+		cout << "	|   Empleado agregado exitosamente!   |" << endl;
+		cout << "	+-------------------------------------+" << endl;
+	}
+	else
+	{
+		cout << "	+-------------------------------+" << endl;
+		cout << "	|   Error, volve a intentarlo   |" << endl;
+		cout << "	+-------------------------------+" << endl;
+	}
+	system("pause");
 }
 
 void ServicioEmpleado::verEmpleados(int idRol)
 {
-    system("cls");
-    Empleado empleado;
-    ServicioActividad actividad;
-    int contador = 0;
+	system("cls");
 
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
+	Empleado empleado;
+	ServicioActividad servActi;
+	int contador = 0;
+	int cantEmpleados = archivoEmpleado.cantidadRegistros();
 
-    if(idRol == 0)
-    {
-        cout << "+----------------------------------+" << endl;
-        cout << "|             GERENTES             |" << endl;
-        cout << "+----------------------------------+" << endl;
-    }
-    else
-    {
-        cout << "+----------------------------------+" << endl;
-        cout << "|           ENTRENADORES           |" << endl;
-        cout << "+----------------------------------+" << endl;
-    }
+	if (idRol == 0)
+	{
+		cout << "		+--------------------------+" << endl;
+		cout << "		|         GERENTES         |" << endl;
+		cout << "		+--------------------------+" << endl << endl;
+	}
+	else
+	{
+		cout << "		+----------------------------------------------------------------------+" << endl;
+		cout << "		|                              ENTRENADORES                            |" << endl;
+		cout << "		+----------------------------------------------------------------------+" << endl << endl;
+	}
 
-    for(int i=0; i<cantidad; i++)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(i);
+	for (int q = 0; q < cantEmpleados; q++)
+	{
+		empleado = archivoEmpleado.leerReg(q);
 
-        if(empleado.getIdRol() == idRol && empleado.getEstado())
-        {
+		if (empleado.getIdRol() == idRol && empleado.getEstado())
+		{
+			cout << string(80, '-') << endl;
+			cout << left << setw(20) << "NOMBRE: " << "|"
+				<< setw(20) << "APELLIDO: " << "|"
+				<< setw(20) << "ID: " << "|"
+				<< setw(20) << "FECHA DE INGRESO:  " << "|" << endl;
+			cout << string(80, '-') << endl;
 
-            cout << left << setw(19) << " Nombre: " << empleado.getNombre() << endl;
-            cout << setw(19) << " Apellido: " << empleado.getApellido() << endl;
-            cout << setw(19) << " Fecha de ingreso: " << empleado.getFechaDeIngreso().toString() << endl;
-            cout << setw(19) << " Legajo: " << empleado.getLegajo() << endl;
+			cout << left << setw(15) << empleado.getNombre() << "|"
+				<< setw(20) << empleado.getApellido() << "|"
+				<< setw(20) << empleado.getIdUsuario() << "|"
+				<< setw(20) << empleado.getFechaIngreso().toString() << "|" << endl;
 
-            if (empleado.getIdActividadPrincipal() == 0)
-            {
-                cout << setw(18) << " Actividad: " << "Gerente" << endl;
-            }
-            else
-            {
-                actividad.buscarActividad(empleado.getIdActividadPrincipal());
-            }
-
-            cout << "+----------------------------------+" << endl;
-            contador++;
-            if(contador%5 == 0)
-            {
-                cout << endl;
-                cout << "Siguiente pagina..." << endl;
-                system("pause");
-                system("cls");
-            }
-
-        }
-    }
-
-    system("pause");
+			if (empleado.getIdActividad() == 0)
+			{
+				cout << left << setw(20) << " ACTIVIDAD: Gerente" << endl;
+			}
+			else
+			{
+				servActi.buscarActividad(empleado.getIdActividad());
+			}
+			cout << string(80, '-') << endl;
+			//cout << "+----------------------------------+" << endl;
+			contador++;
+			if (contador % 5 == 0)
+			{
+				cout << endl;
+				cout << "Siguiente pagina..." << endl;
+				system("pause");
+				system("cls");
+			}
+		}
+	}
+	system("pause");
 }
-
-
-void ServicioEmpleado::agregarEmpleado(int idRol)
-{
-    string nombre, apellido, pass1, pass2;
-    int dni, idUsuario, opcion;
-    int dia, mes, anio;
-    Fecha fechaIngreso;
-    bool estado = true;
-    int legajo, idTurno, idActividadPrincipal = 0;
-    bool semana[7] = {};
-
-    ServicioActividad actividad;
-    ServicioEmpleado servicio;
-
-    system("cls");
-    cout << "+----------------------------+" << endl;
-    cout << "|  INGRESO DATOS PERSONALES: |" << endl;
-    cout << "+----------------------------+" << endl;
-    cout << endl;
-    cout << " DNI: ";
-    cin >> dni;
-
-    if(servicio.comprobarDniEmpleado(dni) != -1)
-    {
-        cout << endl;
-        cout << " DNI ya ingresado, ID #" << servicio.comprobarDniEmpleado(dni) << endl;
-        cout << " Compruebe su estado en apartado <BUSCAR> " << endl;
-        cout << endl;
-        system("pause");
-        return;
-    }
-    cout << " Nombre: ";
-    cin.ignore();
-    getline(cin, nombre);
-    cout << " Apellido: ";
-    getline(cin, apellido);
-
-    system("cls");
-    cout << "+-----------------------+" << endl;
-    cout << "|  FECHA DE NACIMIENTO: |" << endl;
-    cout << "+-----------------------+" << endl;
-    cout << endl;
-    cout << " Dia: ";
-    cin >> dia;
-    cout << " Mes: ";
-    cin >> mes;
-    cout << " Anio: ";
-    cin >> anio;
-
-    system("cls");
-    cout << "+-------------------------+" << endl;
-    cout << "|      TURNO LABORAL:     |" << endl;
-    cout << "+-------------------------+" << endl;
-    cout << endl;
-    cout << " 0 - 8hs a 13hs " << endl;
-    cout << " 1 - 13hs a 18hs " << endl;
-    cout << " 2 - 18hs a 23hs " << endl;
-    cout << endl;
-    cout << " Su Seleccion: ";
-    cin >> idTurno;
-
-    do
-    {
-        system("cls");
-        cout << "+-----------------------+" << endl;
-        cout << "|      CONTRASENIA:     |" << endl;
-        cout << "+-----------------------+" << endl;
-        cout << endl;
-        cout << " Ingrese contrasenia: ";
-        cin >> pass1;
-        cout << " Repita contrasenia: ";
-        cin >> pass2;
-
-        if( strcmp(pass1.c_str(), pass2.c_str()) != 0)
-        {
-            cout << " Contrasenias no coinciden, vuelva a intentar." << endl;
-            system("pause");
-        }
-
-    }
-    while(strcmp(pass1.c_str(), pass2.c_str()) != 0);
-
-
-    if(idRol == 1)
-    {
-        system("cls");
-        cout << "+---------------------------------+" << endl;
-        cout << "|            ACTIVIDAD            |" << endl;
-        cout << "+---------------------------------+" << endl;
-        cout << endl;
-        cout << " 1 - Ver Actividades disponibles " << endl;
-        cout << " 2 - Agregar nueva Actividad " << endl;
-        cout << endl;
-        cout << " Su seleccion: ";
-        cin >> opcion;
-        if(opcion == 1)
-        {
-            actividad.listarActividades();
-            cout << endl;
-            cout << " Ingrese ID Actividad principal: ";
-            cin >> idActividadPrincipal;
-        }
-        else
-        {
-            idActividadPrincipal = actividad.agregarActividad();
-        }
-    }
-
-    Fecha fechaNacimiento(dia, mes, anio);
-    idUsuario = servicio.obternerUltimoId();
-    legajo = servicio.obternerUltimoLegajo();
-
-    Empleado empleado(nombre, apellido, dni, idUsuario, fechaNacimiento, fechaIngreso, pass1, estado, idRol, legajo, idTurno, idActividadPrincipal, semana);
-
-
-    system("cls");
-    if(_archivoEmpleado.guardarEmpleado(empleado))
-    {
-        cout << " Nombre: " << nombre << ", apellido: " << apellido << endl;
-        cout << " Fecha de nacimiento: " << fechaNacimiento.toString() << endl;
-        cout << " ID# " << idUsuario << ", legajo " << legajo << " agregado exitosamente." << endl;
-    }
-    else
-    {
-        cout << "Error de ingreso" << endl;
-    }
-
-    system("pause");
-
-}
-
-void ServicioEmpleado::restaurarUnEmpleado(int idRol)
-{
-    int idEmpleado;
-    bool opcion;
-    Empleado empleado;
-
-    system("cls");
-    cout << "Ingrese ID     : #";
-    cin >> idEmpleado;
-
-    int pos = _archivoEmpleado.buscarEmpleado(idEmpleado);
-
-    if(pos != -1)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(pos);
-
-        if(empleado.getIdRol() == idRol)
-        {
-            if(!empleado.getEstado())
-            {
-                cout << " Nombre        : " << empleado.getNombre() << endl;
-                cout << " Apellido      : " << empleado.getApellido() << endl;
-                cout << " DNI           : " << empleado.getDni() << endl;
-                cout << " Fecha Ingreso : " << empleado.getFechaDeIngreso().toString() << endl;
-                cout << endl;
-                cout << " Desea volver a activar al empleado? 1 - SI | 0 - NO " << endl;
-                cout << " Su seleccion: ";
-                cin >> opcion;
-
-                empleado.setEstado(opcion);
-
-                if(_archivoEmpleado.guardarEmpleado(empleado, pos))
-                {
-                    system("cls");
-                    cout << " ID # " << idEmpleado << endl;
-                    cout << " Estado Actualizado a ACTIVO " << endl;
-                }
-            }
-            else
-            {
-                cout << " El estado es ACTIVO." << endl;
-            }
-        }
-        else
-        {
-            system("cls");
-            if(idRol == 0)
-            {
-                cout << " ID corresponde a un Entrenador, dirijase al gestor correspondiente...." << endl;
-            }
-            else
-            {
-                cout << " ID corresponde a un Gerente, dirijase al gestor correspondiente...." << endl;
-            }
-        }
-    }
-    system("pause");
-
-}
-
 
 void ServicioEmpleado::modificarEmpleado(int idRol)
 {
-    string nombre, apellido;
-    int dia, mes, anio;
-    bool estado = true;
-    Fecha fechaNacimiento;
+	system("cls");
 
-    int idEmpleado, opcion, eliminar;
-    Empleado empleado;
+	Empleado empleado;
+	string nombre, apellido;
+	int dia, mes, anio;
+	int idUsuario, opcion, eliminar;
+	bool estado = true;
+	Fecha fechaNacimiento;
 
-    system("cls");
-    cout << " Ingrese ID: ";
-    cin >> idEmpleado;
+	cout << "		+ -------------------------------------------------------------------- +" << endl;
+	cout << "		|                          MODIFICAR EMPLEADO                          |" << endl;
+	cout << "		+ -------------------------------------------------------------------- +" << endl << endl;
 
-    int pos = _archivoEmpleado.buscarEmpleado(idEmpleado);
+	cout << "  Ingresa el id del empleado que deseas modificar" << endl;
+	cin >> idUsuario;
 
-    if(pos != -1)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(pos);
+	int pos = archivoEmpleado.buscarReg(idUsuario);
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
+		if (empleado.getIdRol() == idRol)
+		{
+			system("cls");
+			cout << "+ ------------------------------- +" << endl;
+			cout << "| 1 - Modificar datos personales  |" << endl;
+			cout << "+ ------------------------------- +" << endl;
+			cout << "| 2 - Modificar estado/eliminar   |" << endl;
+			cout << "+ ------------------------------- +" << endl;
+			cout << endl;
+			cout << " Opcion elegida: ";
+			cin >> opcion;
 
-        if(empleado.getIdRol() == idRol)
-        {
-            system("cls");
-            cout << "+------------------------------------+" << endl;
-            cout << "| 1 - Modificar Datos Personales     |" << endl;
-            cout << "+------------------------------------+" << endl;
-            cout << "| 2 - Modificar Fecha de Nacimiento  |" << endl;
-            cout << "+------------------------------------+" << endl;
-            cout << "| 3 - Modificar Estado/Eliminar      |" << endl;
-            cout << "+------------------------------------+" << endl;
-            cout << endl;
-            cout << " Su seleccion: ";
-            cin >> opcion;
+			system("cls");
+			switch (opcion)
+			{
+			case 1:
+				cout << " Nombre: " << empleado.getNombre() << ", Apellido: " << empleado.getApellido() << endl;
+				cout << endl;
+				cout << " Ingrese Nombre: ";
+				cin >> nombre;
+				cout << " Ingrese Apellido: ";
+				cin >> apellido;
 
-            system("cls");
-            switch(opcion)
-            {
-            case 1:
-                cout << " Nombre: " << empleado.getNombre() << ", Apellido: " << empleado.getApellido()<< endl;
-                cout << endl;
-                cout << " Ingrese Nombre: ";
-                cin.ignore();
-                getline(cin, nombre);
-                cout << " Ingrese Apellido: ";
-                getline(cin, apellido);
+				empleado.setNombre(nombre);
+				empleado.setApellido(apellido);
 
-                empleado.setNombre(nombre);
-                empleado.setApellido(apellido);
+				cout << endl;
+				cout << " Fecha de Nacimiento: " << empleado.getFechaNacimiento().toString() << endl;
+				cout << endl;
+				cout << " Ingrese Dia: ";
+				cin >> dia;
+				cout << " Ingrese Mes: ";
+				cin >> mes;
+				cout << " Ingrese Anio: ";
+				cin >> anio;
 
-                break;
-            case 2:
-                cout << " Fecha de Nacimiento: " << empleado.getFechaNacimiento().toString() << endl;
-                cout << endl;
-                cout << " Ingrese Dia: ";
-                cin >> dia;
-                cout << " Ingrese Mes: ";
-                cin >> mes;
-                cout << " Ingrese Anio: ";
-                cin >> anio;
+				fechaNacimiento.setDia(dia);
+				fechaNacimiento.setMes(mes);
+				fechaNacimiento.setDia(anio);
 
-                fechaNacimiento.setDia(dia);
-                fechaNacimiento.setMes(mes);
-                fechaNacimiento.setDia(anio);
+				empleado.setFechaNacimiento(fechaNacimiento);
+				break;
 
-                empleado.setFechaNacimiento(fechaNacimiento);
+			case 2:
 
-                break;
-            case 3:
+				if (empleado.getEstado())
+				{
+					cout << " Estado Actual: ACTIVO" << endl;
+					cout << endl;
+					cout << " Desea eliminar empleado: 1 - Si | 0 - NO" << endl;
+					cout << " Opcion elegida: ";
+					cin >> eliminar;
+					if (eliminar == 1)
+					{
+						estado = false;
+						empleado.setEstado(estado);
+					}
+				}
+				break;
 
-                if(empleado.getEstado())
-                {
-                    cout << " Estado Actual: ACTIVO" << endl;
-                    cout << endl;
-                    cout << " Desea eliminar empleado: 1 - Si | 0 - NO" << endl;
-                    cout << " Su seleccion: ";
-                    cin >> eliminar;
-                    if(eliminar == 1)
-                    {
-                        estado = false;
-                        empleado.setEstado(estado);
-                    }
-                }
+			default:
+				cout << "  Opcion incorrecta, volve a intentarlo" << endl;
+				break;
+			}
+		}
 
-                break;
-            default:
-                cout << " Opcion Incorrecta..." << endl;
-                break;
-            }
+		cout << " Confirmar Cambios?: 1 - Si | 0 - NO" << endl;
+		cin >> opcion;
 
-            cout << " Confirmar Cambios?: 1 - Si | 0 - NO" << endl;
-            cin >> opcion;
+		if (opcion == 1 && archivoEmpleado.modificarReg(empleado, pos))
+		{
+			cout << " " << endl;
+			cout << "+ -------------------------------------- +" << endl;
+			cout << "|   Empleado actualizado correctamente   |" << endl;
+			cout << "+ -------------------------------------- +" << endl;
+		}
+	}
+	else
+	{
+		cout << "	+ ---------------------------------------- + " << endl;
+		cout << "	|   ID no encontrado, volve a intentarlo   |" << endl;
+		cout << "	+ ---------------------------------------- +" << endl;
+	}
 
-            if(opcion == 1 && _archivoEmpleado.guardarEmpleado(empleado, pos))
-            {
-                cout << " Datos Actualizados correctamente" << endl;
-            }
+	system("pause");
+}
 
-        }
-        else
-        {
-            system("cls");
-            if(idRol == 0)
-            {
-                cout << " ID corresponde a un Entrenador, dirijase al gestor correspondiente..." << endl;
-            }
-            else
-            {
-                cout << " ID corresponde a un Gerente, dirijase al gestor correspondiente..." << endl;
-            }
-        }
-    }
+void ServicioEmpleado::buscarEmpleado(int idRol)
+{
+	system("cls");
 
-    system("pause");
+	Empleado empleado;
+	int idUsuario;
+
+	cout << endl;
+	cout << "		+ ---------------------------- +" << endl;
+	cout << "		|		BUSCAR EMPLEADO		   |" << endl;
+	cout << "		+ ---------------------------- +" << endl;
+
+	cout << "  Ingresa el id del usuario: #";
+	cin >> idUsuario;
+
+	int pos = archivoEmpleado.buscarReg(idUsuario);
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
+		if (empleado.getIdRol() == idRol)
+		{
+			cout << string(90, '-') << endl;
+			cout << left << setw(20) << "NOMBRE: " << "|"
+				<< setw(20) << "APELLIDO" << "|"
+				<< setw(20) << "ID" << "|"
+				<< setw(20) << "DNI" << "|"
+				<< setw(20) << "FECHA DE INGRESO" << "|"
+				<< setw(20) << "ESTADO" << endl;
+			cout << string(90, '-') << endl;
+
+			cout << left << setw(15) << empleado.getNombre() << "|"
+				<< setw(20) << empleado.getApellido() << "|"
+				<< setw(20) << empleado.getIdUsuario() << "|"
+				<< setw(20) << empleado.getFechaIngreso().toString() << "|"
+				<< setw(20) << empleado.getEstado() << endl;
+			cout << string(90, '-') << endl;
+		}
+	}
+	else
+	{
+		cout << endl;
+		cout << "	+ ---------------------------------------- + " << endl;
+		cout << "	|   ID no encontrado, volve a intentarlo   |" << endl;
+		cout << "	+ ---------------------------------------- +" << endl;
+	}
+	system("pause");
+}
+
+void ServicioEmpleado::restaurarEmpleado(int idRol)
+{
+	int idEmpleado;
+	bool opcion;
+	Empleado empleado;
+
+	cout << endl;
+	cout << "		+ -------------------------------- +" << endl;
+	cout << "		|		RESTAURAR EMPLEADO		   |" << endl;
+	cout << "		+ -------------------------------- +" << endl;
+
+	cout << "  Ingresa el id del empleado: #";
+	cin >> idEmpleado;
+
+	int pos = archivoEmpleado.buscarReg(idEmpleado);
+
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
+
+		if (empleado.getIdRol() == idRol)
+		{
+			if (!empleado.getEstado())
+			{
+				cout << " Nombre        : " << empleado.getNombre() << endl;
+				cout << " Apellido      : " << empleado.getApellido() << endl;
+				cout << " DNI           : " << empleado.getDni() << endl;
+				cout << " Fecha Ingreso : " << empleado.getFechaIngreso().toString() << endl;
+
+				cout << endl;
+				cout << " Desea volver a activar al empleado? 1 - SI | 0 - NO " << endl;
+				cout << " Opcion elegida: ";
+				cin >> opcion;
+
+				empleado.setEstado(opcion);
+
+				if (archivoEmpleado.modificarReg(empleado, pos))
+				{
+					system("cls");
+					cout << endl;
+					cout << "	+ ---------------- +" << endl;
+					cout << "   | ID # " << idEmpleado << "|" << endl;
+					cout << "   | Estado: " << empleado.getEstado() ? cout << "ACTIVO" : cout << "INACTIVO" << "|" << endl;
+					cout << "	+ ---------------- +" << endl;
+				}
+			}
+			else
+			{
+				system("cls");
+				cout << " + -------------- + " << endl;
+				cout << " | Estado: ACTIVO | " << endl;
+				cout << " + -------------- + " << endl;
+			}
+		}
+		else
+		{
+			system("cls");
+			cout << " + ----------------------------------------------- + " << endl;
+			cout << " |   ID ingresado es erroneo, volve a intentarlo   | " << endl;
+			cout << " + ----------------------------------------------- + " << endl;
+		}
+	}
+	system("pause");
 }
 
 void ServicioEmpleado::asignarHorarios()
 {
-    Empleado empleado;
-    int idUsuario, opcion;
-    bool diaSemana[7] = {}, agregar;
-    string horarios;
+	Empleado empleado;
+	int idUsuario, opcion;
+	bool diaSemana[7] = {}, agregar;
+	string horario;
 
+	system("cls");
+	cout << "	+ --------------------------------------- +" << endl;
+	cout << "	|            ASIGNAR HORARIOS             |" << endl;
+	cout << "	+ --------------------------------------- +" << endl;
+	cout << endl;
+	cout << " Ingrese ID del entrenador: ";
+	cin >> idUsuario;
 
-    system("cls");
-    cout << "+------------------------------------------+" << endl;
-    cout << "|            ASIGNAR HORARIOS              |" << endl;
-    cout << "+------------------------------------------+" << endl;
-    cout << endl;
-    cout << " Ingrese ID del entrenador: ";
-    cin >> idUsuario;
+	int pos = archivoEmpleado.buscarReg(idUsuario);
 
-    int pos = _archivoEmpleado.buscarEmpleado(idUsuario);
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
 
-    if(pos != -1)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(pos);
-    }
-    else
-    {
-        cout << " ID incorrecto..." << endl;
-        system("pause");
-        return;
-    }
+		switch (empleado.getIdTurno())
+		{
+		case 0:
+			horario = "08hs a 13hs";
+			break;
+		case 1:
+			horario = "13hs a 18hs";
+			break;
+		case 2:
+			horario = "18hs a 23hs";
+			break;
+		}
 
-    switch(empleado.getIdTurno())
-    {
-    case 0:
-        horarios = "08hs a 13hs";
-        break;
-    case 1:
-        horarios = "13hs a 18hs";
-        break;
-    case 2:
-        horarios = "18hs a 23hs";
-        break;
-    }
+		for (int q = 0; q < 7; q++)
+		{
+			if (!diaSemana[q])
+			{
+				switch (q)
+				{
+				case 0:
+					cout << " Lunes de " << horario << endl;
+					break;
+				case 1:
+					cout << " Martes de " << horario << endl;
+					break;
+				case 2:
+					cout << " Miercoles de " << horario << endl;
+					break;
+				case 3:
+					cout << " Jueves de " << horario << endl;
+					break;
+				case 4:
+					cout << " Viernes de " << horario << endl;
+					break;
+				case 5:
+					cout << " Sabado de " << horario << endl;
+					break;
+				case 6:
+					cout << " Domingo de " << horario << endl;
+					break;
+				}
+				// si el dia esta en false/cero pregunta, si deseo agregar el dia o no
+				cout << " Agregar? 1 - SI | 0 - NO: ";
+				cin >> agregar;
+				cout << "   + -------------------------------------- +" << endl;
+				diaSemana[q] = agregar;
+			}
+		}
 
-    system("cls");
-    cout << "+------------------------------------------+" << endl;
-    cout << "|            ASIGNAR HORARIOS              |" << endl;
-    cout << "+------------------------------------------+" << endl;
-    cout << endl;
+		cout << endl;
+		cout << " Confirmas eleccion? 1 - SI | 0 - NO: ";
+		cin >> opcion;
 
-    for(int i=0; i<7; i++)
-    {
-        if(!diaSemana[i])
-        {
-            switch(i)
-            {
-            case 0:
-                cout << " Lunes de " << horarios << endl;
-                break;
-            case 1:
-                cout << " Martes de " << horarios << endl;
-                break;
-            case 2:
-                cout << " Miercoles de " << horarios << endl;
-                break;
-            case 3:
-                cout << " Jueves de " << horarios << endl;
-                break;
-            case 4:
-                cout << " Viernes de " << horarios << endl;
-                break;
-            case 5:
-                cout << " Sabado de " << horarios << endl;
-                break;
-            case 6:
-                cout << " Domingo de " << horarios << endl;
-                break;
-            }
-
-            cout << " Agregar? 1 - SI || 0 - NO: ";
-            cin >> agregar;
-            cout << "+------------------------------------------+" << endl;
-            diaSemana[i] = agregar;
-        }
-    }
-
-    cout << endl;
-    cout << " Confirmar Asignacion 1 - SI | 0 - NO: ";
-    cin >> opcion;
-
-    if(opcion == 1)
-    {
-        empleado.setDiaSem(diaSemana);
-        if(_archivoEmpleado.guardarEmpleado(empleado, pos))
-        {
-            system("cls");
-            cout << " Cambios realizados con exito" << endl;
-        }
-    }
-
-    system("pause");
-
+		if (opcion == 1)
+		{
+			empleado.setDiaSem(diaSemana);
+			if (archivoEmpleado.modificarReg(empleado, pos))
+			{
+				system("cls");
+				cout << "   + ---------------------------------- +" << endl;
+				cout << "   |   Horarios cargados exitosamente   |" << endl;
+				cout << "   + ---------------------------------- +" << endl;
+			}
+		}
+	}
+	else
+	{
+		system("cls");
+		cout << " + ----------------------------------------------- + " << endl;
+		cout << " |   ID ingresado es erroneo, volve a intentarlo   | " << endl;
+		cout << " + ----------------------------------------------- + " << endl;
+		system("pause");
+		return;
+	}
+	system("pause");
 }
 
 void ServicioEmpleado::verHorariosAsignados(int idUsuario)
 {
-    Empleado empleado;
-    bool *diaSemana;
-    string horarios;
+	system("cls");
 
-    int pos = _archivoEmpleado.buscarEmpleado(idUsuario);
+	Empleado empleado;
+	string horario;
+	bool diasTrabajo[7] = {};
 
-    if(pos != -1)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(pos);
+	system("cls");
+	cout << "   + ---------------------------------- + " << endl;
+	cout << "   |         HORARIOS ASIGNADOS         | " << endl;
+	cout << "   + ---------------------------------- + " << endl;
 
-        switch(empleado.getIdTurno())
-        {
-        case 0:
-            horarios = "08hs a 13hs";
-            break;
-        case 1:
-            horarios = "13hs a 18hs";
-            break;
-        case 2:
-            horarios = "18hs a 23hs";
-            break;
-        }
+	int pos = archivoEmpleado.buscarReg(idUsuario);
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
 
-        system("cls");
-        cout << "+-------------------------------+" << endl;
-        cout << "|     HORARIOS DE LA SEMANA     |" << endl;
-        cout << "+-------------------------------+" << endl;
-        for(int i=0; i<7; i++)
-        {
-            diaSemana = empleado.getDiaSem();
-            if(diaSemana[i])
-            {
-                switch(i)
-                {
-                case 0:
-                    cout << " Lunes     : " << horarios << endl;
-                    break;
-                case 1:
-                    cout << " Martes    : " << horarios << endl;
-                    break;
-                case 2:
-                    cout << " Miercoles : " << horarios << endl;
-                    break;
-                case 3:
-                    cout << " Jueves    : " << horarios << endl;
-                    break;
-                case 4:
-                    cout << " Viernes   : " << horarios << endl;
-                    break;
-                case 5:
-                    cout << " Sabado    : " << horarios << endl;
-                    break;
-                case 6:
-                    cout << " Domingo   : " << horarios << endl;
-                    break;
-                }
-                cout << "+-------------------------------+" << endl;
-            }
-        }
-        cout << "+-------------------------------+" << endl;
-        cout << "|            FRANCO/S            |" << endl;
-        cout << "+-------------------------------+" << endl;
+		switch (empleado.getIdTurno())
+		{
+		case 0:
+			horario = "08hs a 13hs";
+			break;
+		case 1:
+			horario = "13hs a 18hs";
+			break;
+		case 2:
+			horario = "18hs a 23hs";
+			break;
+		}
 
-        for(int j=0; j<7; j++)
-        {
-            diaSemana = empleado.getDiaSem();
-            if(!diaSemana[j])
-            {
-                switch(j)
-                {
-                case 0:
-                    cout << "           Lunes  " << endl;
-                    break;
-                case 1:
-                    cout << "           Martes  " << endl;
-                    break;
-                case 2:
-                    cout << "           Miercoles " << endl;
-                    break;
-                case 3:
-                    cout << "           Jueves " << endl;
-                    break;
-                case 4:
-                    cout << "           Viernes " << endl;
-                    break;
-                case 5:
-                    cout << "           Sabado " << endl;
-                    break;
-                case 6:
-                    cout << "           Domingo " << endl;
-                    break;
-                }
-                cout << "+-------------------------------+" << endl;
-            }
-        }
+		for (int q = 0; q < 7; q++)
+		{
+			diasTrabajo[q] = empleado.getDiaSem();
+			if (diasTrabajo[q])
+			{
+				switch (q)
+				{
+				case 0:
+					cout << " Lunes de " << horario << endl;
+					break;
+				case 1:
+					cout << " Martes de " << horario << endl;
+					break;
+				case 2:
+					cout << " Miercoles de " << horario << endl;
+					break;
+				case 3:
+					cout << " Jueves de " << horario << endl;
+					break;
+				case 4:
+					cout << " Viernes de " << horario << endl;
+					break;
+				case 5:
+					cout << " Sabado de " << horario << endl;
+					break;
+				case 6:
+					cout << " Domingo de " << horario << endl;
+					break;
+				}
+				cout << "   + ---------------------------------- + " << endl;
+			}
+		}
 
-    }
-    system("pause");
+		cout << "   + ---------------------------- +" << endl;
+		cout << "   |            FRANCOS           |" << endl;
+		cout << "   + ---------------------------- +" << endl;
 
-}
+		for (int q = 0; q < 7; q++)
+		{
+			diasTrabajo[q] = empleado.getDiaSem();
+			if (!diasTrabajo[q])
+			{
+				switch (q)
+				{
+				case 0:
+					system("cls");
+					cout << "  Lunes FRANCO" << endl;
+					break;
+				case 1:
+					system("cls");
+					cout << "  Martes FRANCO" << endl;
+					break;
+				case 2:
+					system("cls");
+					cout << "  Miercoles FRANCO" << endl;
+					break;
+				case 3:
+					system("cls");
+					cout << "  Jueves FRANCO" << endl;
+					break;
+				case 4:
+					system("cls");
+					cout << "  Viernes FRANCO" << endl;
+					break;
+				case 5:
+					system("cls");
+					cout << "  Sabado FRANCO" << endl;
+					break;
+				case 6:
+					system("cls");
+					cout << "  Domingo FRANCO" << endl;
+					break;
+				}
+				cout << "   + ---------------------------- +" << endl;
+			}
+		}
 
-int ServicioEmpleado::obternerUltimoIdEmpleado()
-{
-    Empleado empleado;
-
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
-
-    if(cantidad > 0)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(cantidad - 1);
-        return empleado.getIdUsuario();
-    }
-
-    return -1;
-}
-
-int ServicioEmpleado::obternerUltimoId()
-{
-    ServicioSocio socio;
-
-    return socio.autoGenerarId();
-}
-
-int ServicioEmpleado::obternerUltimoLegajo()
-{
-    Empleado empleado;
-
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
-
-    if(cantidad > 0)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(cantidad - 1);
-        return empleado.getLegajo()+1;
-    }
-
-    return -1;
-}
-
-
-void ServicioEmpleado::modificarContrasenia(int idEmpleado)
-{
-    system("cls");
-    string pass, pass2;
-    Empleado empleado;
-    int intentos = 0;
-
-
-    int posicion = _archivoEmpleado.buscarEmpleado(idEmpleado);
-
-    empleado = _archivoEmpleado.leerRegistroEmpleado(posicion);
-
-    cout << "+---------------------------------+" << endl;
-    cout << "|      MODIFICAR CONTRASENIA      |" << endl;
-    cout << "+---------------------------------+" << endl;
-    cout << endl;
-    cout << " Ingrese contrasenia actual: ";
-    cin.ignore();
-    getline(cin, pass);
-
-    if(!strcmp(empleado.getContrasenia().c_str(), pass.c_str()))
-    {
-        do
-        {
-            system("cls");
-            cout << endl;
-            cout << " Ingrese la nueva contrasenia: " ;
-            getline(cin, pass2);
-            cout << " Repita la nueva contrasenia: ";
-            getline(cin, pass);
-
-            if(!strcmp(pass.c_str(), pass2.c_str()))
-            {
-                empleado.setContrasenia(pass);
-                if(_archivoEmpleado.guardarEmpleado(empleado, posicion))
-                {
-                    cout << endl;
-                    cout << " Cambio realizado con exito" << endl;
-                    system("pause");
-                    return;
-                }
-            }
-            else
-            {
-                cout << endl;
-                cout << " Las contrasenias no coinciden, intente nuevamente" << endl;
-                intentos++;
-                system("pause");
-            }
-
-        }
-        while(intentos < 3);
-
-    }
-    else
-    {
-        cout << endl;
-        cout << " Contrasenia ingresada es incorrecta" << endl;
-        system("pause");
-        return;
-    }
+	}
+	else
+	{
+		system("cls");
+		cout << "   + ------------------------------- + " << endl;
+		cout << "   |   No tenes horario asignados   | " << endl;
+		cout << "   + ------------------------------- + " << endl;
+		system("pause");
+		return;
+	}
+	system("pause");
 
 }
 
-void ServicioEmpleado::buscarUnEmpleado(int idRol)
+void ServicioEmpleado::modificarContrasenia(int idUsuario)
 {
-    int idUsuario;
-    Empleado empleado;
-    ServicioActividad actividad;
+	system("cls");
 
-    system("cls");
-    cout << " Ingrese ID: #";
-    cin >> idUsuario;
+	Empleado empleado;
+	string pass1, pass2;
+	int opcion;
+	int pos = archivoEmpleado.buscarReg(idUsuario);
 
-    int pos = _archivoEmpleado.buscarEmpleado(idUsuario);
+	cout << endl;
+	cout << "   + ------------------------------------- + " << endl;
+	cout << "   |         MODIFICAR CONTRASENIA         | " << endl;
+	cout << "   + ------------------------------------- + " << endl;
 
-    if(pos != -1)
-    {
-        empleado = _archivoEmpleado.leerRegistroEmpleado(pos);
 
-        if(empleado.getIdRol() == idRol)
-        {
-            cout << "+----------------------------------------------------+" << endl;
-            cout << "|                 BUSCAR UN EMPLEADO                 |" << endl;
-            cout << "+----------------------------------------------------+" << endl;
-            cout << endl;
-            cout << " Nombre          : " << empleado.getNombre() << endl;
-            cout << " Apellido        : " << empleado.getApellido() << endl;
-            cout << " Fecha Ingreso   : " << empleado.getFechaDeIngreso().toString() << endl;
-            cout << " Legajo          : " << empleado.getLegajo() << endl;
-            if(empleado.getIdRol() == 0)
-            {
-                cout << " Actividad       : Gerente" << endl;
-            }
-            else
-            {
-                actividad.buscarActividad(empleado.getIdActividadPrincipal());
-            }
+	if (pos != -1)
+	{
+		empleado = archivoEmpleado.leerReg(pos);
 
-            cout << " Estado          : ";
-            if(empleado.getEstado())
-            {
-                cout << " ACTIVO " << endl;
-            }
-            else
-            {
-                cout << " DADO DE BAJA " << endl;
-            }
-        }
-        else
-        {
-            if(idRol == 0)
-            {
-                cout << " Id ingresado corresponde a un Entrenador..." << endl;
-            }
-            else
-            {
-                cout << " Id ingresado corresponde a un Gerente..." << endl;
-            }
-        }
-        cout << "+----------------------------------------------------+" << endl;
+		cout << "  Contrasenia actual: " << empleado.getContrasenia() << endl << endl;
 
-    }
-    else
-    {
-        cout << " ID no encontrado..." << endl;
-    }
+		do
+		{
+			system("cls");
+			cout << endl;
+			cout << "  Ingresa una nueva contrasenia: " << endl;
+			cin >> pass1;
+			cout << "  Confirma la contrasenia: " << endl;
+			cin >> pass2;
+			cout << "  Tu nueva contrasenia: " << endl;
+			cin >> pass1;
+		} while (pass1 != pass2);
 
-    system("pause");
+		cout << "  Confirmas el cambio de contrasenia? [1] SI - [2] NO " << endl;
+		cout << "  Opcion elegida: ";
+		cin >> opcion;
+
+		if (opcion == 1)
+		{
+			system("cls");
+			empleado.setContrasenia(pass1);
+			if (archivoEmpleado.modificarReg(empleado, pos))
+			{
+				cout << endl;
+				cout << "   + ------------------------------ + " << endl;
+				cout << "   |   Cambio realizado con exito   | " << endl;
+				cout << "   + ------------------------------ + " << endl;
+			}
+			else
+			{
+				cout << endl;
+				cout << "   + ------------------------------------- + " << endl;
+				cout << "   |   Hubo un error, volve a intentarlo   | " << endl;
+				cout << "   + ------------------------------------- + " << endl;
+			}
+		}
+	}
+	else
+	{
+		system("cls");
+		cout << " + ----------------------------------------------- + " << endl;
+		cout << " |   ID ingresado es erroneo, volve a intentarlo   | " << endl;
+		cout << " + ----------------------------------------------- + " << endl;
+		return;
+	}
+	system("pause");
+
+}
+
+int ServicioEmpleado::obtenerUltimoId()
+{
+	Empleado empleado;
+
+	int cantEmpleados = archivoEmpleado.cantidadRegistros();
+
+	if (cantEmpleados > 0)
+	{
+		empleado = archivoEmpleado.leerReg(cantEmpleados - 1);
+		return empleado.getIdUsuario() + 1;
+	}
+
+	return -1;
 }
 
 int ServicioEmpleado::elegirEntrenador()
 {
-    int *vectPosiciones;
-    int *vectorID;
-    int opcion;
-    Empleado entrenador;
-    ServicioActividad actividad;
+	int* empleados;
+	int* idsEmpleados;
+	int opcion;
+	Empleado entrenador;
+	ServicioActividad actividad;
 
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
-    int cantEntrenadores = _archivoEmpleado.cantidadRegistrosEmpleadosPorEstado(cantidad, true, 1);
+	int cantEmpleados = archivoEmpleado.cantidadRegistros();
+	int entrenadoresActivos = archivoEmpleado.cantidadEmpleadosPorEstado(cantEmpleados, true, 1);
 
-    vectPosiciones = new int[cantEntrenadores];
-    vectorID = new int[cantEntrenadores];
+	empleados = new int[entrenadoresActivos];
+	idsEmpleados = new int[entrenadoresActivos];
 
-    if(vectPosiciones == nullptr || vectorID == nullptr)
-    {
-        return -1;
-    }
+	if (empleados == nullptr || idsEmpleados == nullptr)
+	{
+		return -1;
+	}
 
-    *vectPosiciones = _archivoEmpleado.leerRegistrosEmpleadosActivos(cantidad, vectPosiciones, cantEntrenadores, 1);
+	*empleados = archivoEmpleado.empleadosActivos(cantEmpleados, empleados, entrenadoresActivos, 1);
 
-    cout << "+--------------------------------+" << endl;
-    cout << "|          ENTRENADORES          |"  << endl;
-    cout << "+--------------------------------+" << endl;
+	cout << "      +-------------------------------------------+" << endl;
+	cout << "      |          ENTRENADORES DISPONIBLES         |" << endl;
+	cout << "      +-------------------------------------------+" << endl;
 
-    for(int i=0; i<cantEntrenadores; i++)
-    {
-        entrenador = _archivoEmpleado.leerRegistroEmpleado(vectPosiciones[i]);
+	for (int i = 0; i < entrenadoresActivos; i++)
+	{
+		entrenador = archivoEmpleado.leerReg(empleados[i]);
+		idsEmpleados[i] = entrenador.getIdUsuario();
 
+		cout << " " << i + 1 << ". Nombre: " << entrenador.getNombre() << endl;
+		cout << "  Apellido: " << entrenador.getApellido() << endl;
+		actividad.buscarActividad(entrenador.getIdActividad());
 
-        cout << " " << i+1 << ". Nombre: " << entrenador.getNombre() << endl;
-        cout << "    Apellido: " << entrenador.getApellido() << endl;
-        actividad.buscarActividad(entrenador.getIdActividadPrincipal());
+		cout << "+--------------------------------+" << endl;
+	}
 
-        vectorID[i] = entrenador.getIdUsuario();
-        cout << "+--------------------------------+" << endl;
-    }
+	cout << endl;
+	cout << " Seleccione un entrenador: [1 - " << entrenadoresActivos << "]: ";
+	cin >> opcion;
 
-    cout << endl;
-    cout << " Seleccione un entrenador: (1 a " << cantEntrenadores << "): ";
-    cin >> opcion;
+	int entrenadorSelected = idsEmpleados[opcion - 1];
 
-    int idSeleccionado = vectorID[opcion-1];
+	delete[]empleados;
+	delete[]idsEmpleados;
 
-    delete []vectPosiciones;
-    delete []vectorID;
-
-    return idSeleccionado;
-
+	return entrenadorSelected;
 }
 
-int ServicioEmpleado::comprobarDniEmpleado(int dni)
-{
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
-    Empleado empleado;
-
-    if(cantidad != -1)
-    {
-        for(int i=0; i<cantidad; i++)
-        {
-            empleado = _archivoEmpleado.leerRegistroEmpleado(i);
-            if(empleado.getDni() == dni)
-            {
-                return empleado.getIdUsuario();
-            }
-        }
-    }
-
-    return -1;
-}
 
 void ServicioEmpleado::verSociosAsignados(int idEntrenador)
 {
-    system("cls");
-    string horarios;
-    ServicioSocio socio;
-    Empleado entrenador;
+	system("cls");
+	string horario;
+	ServicioSocio socio;
+	Empleado entrenador;
 
-    int pos = _archivoEmpleado.buscarEmpleado(idEntrenador);
-    entrenador = _archivoEmpleado.leerRegistroEmpleado(pos);
+	int pos = archivoEmpleado.buscarReg(idEntrenador);
+	entrenador = archivoEmpleado.leerReg(pos);
 
-    switch(entrenador.getIdTurno())
-    {
-    case 0:
-        horarios = "08hs a 13hs";
-        break;
-    case 1:
-        horarios = "13hs a 18hs";
-        break;
-    case 2:
-        horarios = "18hs a 23hs";
-        break;
-    }
+	switch (entrenador.getIdTurno())
+	{
+	case 0:
+		horario = "08hs a 13hs";
+		break;
+	case 1:
+		horario = "13hs a 18hs";
+		break;
+	case 2:
+		horario = "18hs a 23hs";
+		break;
+	}
 
-    cout << "+-----------------------------------------------------------------------------+" << endl;
-    cout << "|                        ENTRENADOR: " << entrenador.getNombre() << " " << entrenador.getApellido() << endl;
-    cout << "+-----------------------------------------------------------------------------+" << endl;
-    cout << "|                        HORARIO: " << horarios << "                                 |" << endl;
-    cout << "+-----------------------------------------------------------------------------+" << endl;
-    socio.mostrarSociosPorEntrenador(idEntrenador);
-    cout << "+-----------------------------------------------------------------------------+" << endl;
+	cout << string(65, '-') << endl;
+	cout << left << setw(25) << "| ENTRENADOR" << "|"
+		<< setw(25) << "| HORARIO" << endl;
+	cout << string(65, '-') << endl;
+	cout << left << setw(20) << "| " << entrenador.getNombre() << " " << entrenador.getApellido() << "|"
+		<< setw(20) << "| " << horario << endl;
+	cout << string(65, '-') << endl;
 
-    system("pause");
+	socio.listarSociosPorEntrenador(idEntrenador);
+
+	system("pause");
 }
 
-void ServicioEmpleado::mostrarHorariosDeEntrenadores()
+void ServicioEmpleado::mostrarHorariosEntrenadores()
 {
-    system("cls");
-    int indice = 1, espacios = 25;
-    string horarios;
-    char nombreCompleto[30];
-    Empleado entrenador;
-    ServicioActividad actividad;
+	system("cls");
+	string horario, nombre, apellido;
+	Empleado entrenador;
+	ServicioActividad actividad;
 
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
+	int cantEmpleados = archivoEmpleado.cantidadRegistros();
 
-    cout << "+----------------------------------------------------------------------------+" << endl;
-    cout << "|                           HORARIOS DE ENTREENADORES                        |" << endl;
-    cout << "+----------------------------------------------------------------------------+" << endl;
+	cout << "   + -------------------------------------------------------------------------- +" << endl;
+	cout << "   |                           HORARIOS DE ENTRENADORES                         |" << endl;
+	cout << "   + -------------------------------------------------------------------------- +" << endl;
 
-    for(int i=0; i<cantidad; i++)
-    {
-        entrenador = _archivoEmpleado.leerRegistroEmpleado(i);
-        if(entrenador.getIdRol() == 1 && entrenador.getEstado())
-        {
-            switch(entrenador.getIdTurno())
-            {
-            case 0:
-                horarios = "08hs a 13hs";
-                break;
-            case 1:
-                horarios = "13hs a 18hs";
-                break;
-            case 2:
-                horarios = "18hs a 23hs";
-                break;
-            }
+	for (int q = 0; q < cantEmpleados; q++)
+	{
+		entrenador = archivoEmpleado.leerReg(q);
+		if (entrenador.getIdRol() == 1 && entrenador.getEstado())
+		{
+			switch (entrenador.getIdTurno())
+			{
+			case 0:
+				horario = "08hs a 13hs";
+				break;
+			case 1:
+				horario = "13hs a 18hs";
+				break;
+			case 2:
+				horario = "18hs a 23hs";
+				break;
+			}
 
-            strcpy(nombreCompleto, entrenador.getNombre().c_str());
-            ///strcat dentro de la libreria cstring añade el contenido de una cadena a otra.
-            strcat(nombreCompleto, " ");
-            strcat(nombreCompleto, entrenador.getApellido().c_str());
+			cout << string(105, '-') << endl;
+			cout << left << setw(5) << "ID" << "|"
+				<< setw(20) << "Entrenador/a" << "|"
+				<< setw(14) << "Horarios" << endl;
+			cout << string(105, '-') << endl;
 
-            ///strlen dentro de la libreria cstring devuelve la cantidad de caracteres de una cadena.
-            espacios = 25 - strlen(nombreCompleto);
-
-            if (espacios < 0)
-            {
-                espacios = 0;
-            }
-
-            cout << " " << indice << ". " << nombreCompleto;
-
-            for (int i = 0; i<espacios; i++)
-            {
-                cout << " ";
-            }
-
-            cout << "| Horario: " << horarios << " | ";
-            actividad.buscarActividad(entrenador.getIdActividadPrincipal());
-
-            indice++;
-        }
-    }
-    cout << "+----------------------------------------------------------------------------+" << endl;
-    cout << endl;
-    system("pause");
+			system("cls");
+			cout << "----------------------------------------------" << endl;
+			cout << "   Entrenador/a: " << entrenador.getNombre() << " " << entrenador.getApellido() << endl;
+			cout << "   ID: " << entrenador.getIdUsuario() << endl;
+			cout << "   Horarios" << horario << endl;
+			actividad.buscarActividad(entrenador.getIdActividad());
+		}
+	}
+	cout << endl;
+	system("pause");
 }
 
 void ServicioEmpleado::listarEmpleadoOrdenados(int idRol, int lista)
 {
-    system("cls");
-    Empleado *empleado;
-    int *posEmpleado;
-    int indice = 1;
+	system("cls");
+	Empleado* empleado;
+	int* posEmpleado;
+	int indice = 1;
 
-    int cantidad = _archivoEmpleado.cantidadRegistrosEmpleados();
-    int cantActivos = _archivoEmpleado.cantidadRegistrosEmpleadosPorEstado(cantidad, true, idRol);
+	int cantidad = archivoEmpleado.cantidadRegistros();
+	int cantActivos = archivoEmpleado.cantidadEmpleadosPorEstado(cantidad, true, idRol);
 
-    empleado = new Empleado[cantActivos];
-    posEmpleado = new int[cantActivos];
+	empleado = new Empleado[cantActivos];
+	posEmpleado = new int[cantActivos];
 
-    if(empleado == nullptr || posEmpleado == nullptr)
-    {
-        return;
-    }
+	if (empleado == nullptr || posEmpleado == nullptr)
+	{
+		return;
+	}
 
-    *posEmpleado = _archivoEmpleado.leerRegistrosEmpleadosActivos(cantidad, posEmpleado, cantActivos, idRol);
+	*posEmpleado = archivoEmpleado.empleadosActivos(cantidad, posEmpleado, cantActivos, idRol);
 
-    for(int i=0; i<cantActivos; i++)
-    {
-        empleado[i] = _archivoEmpleado.leerRegistroEmpleado(posEmpleado[i]);
-    }
+	for (int i = 0; i < cantActivos; i++)
+	{
+		empleado[i] = archivoEmpleado.leerReg(posEmpleado[i]);
+	}
 
-    if(lista == 0)
-    {
-        ordenarPorApellido(empleado, cantActivos);
-        cout << "+------------------------------------------------------+" << endl;
-        cout << "|              LISTA ORDENADA POR APELLIDO             |" << endl;
-        cout << "+------------------------------------------------------+" << endl;
-    }
-    else
-    {
-        ordenarPorDni(empleado, cantActivos);
-        cout << "+------------------------------------------------------+" << endl;
-        cout << "|                 LISTA ORDENADA POR DNI               |" << endl;
-        cout << "+------------------------------------------------------+" << endl;
-    }
+	if (lista == 0)
+	{
+		ordenarPorApellido(empleado, cantActivos);
+		cout << "+------------------------------------------------------+" << endl;
+		cout << "|              LISTA ORDENADA POR APELLIDO             |" << endl;
+		cout << "+------------------------------------------------------+" << endl;
+	}
+	else
+	{
+		ordenarPorDni(empleado, cantActivos);
+		cout << "+------------------------------------------------------+" << endl;
+		cout << "|                 LISTA ORDENADA POR DNI               |" << endl;
+		cout << "+------------------------------------------------------+" << endl;
+	}
 
+	for (int i = 0; i < cantActivos; i++)
+	{
+		cout << " " << indice << ". DNI: " << empleado[i].getDni() << ", " << empleado[i].getApellido() << ", " << empleado[i].getNombre() << "   ID #" << empleado[i].getIdUsuario() << endl;
+		cout << "+------------------------------------------------------+" << endl;
+		indice++;
+	}
 
+	cout << endl;
 
+	delete[]empleado;
+	delete[]posEmpleado;
 
-    for(int i=0; i<cantActivos; i++)
-    {
-        cout << " " << indice << ". DNI: " << empleado[i].getDni() << ", " << empleado[i].getApellido() << ", " << empleado[i].getNombre() << "   ID #" << empleado[i].getIdUsuario() << endl;
-        cout << "+------------------------------------------------------+" << endl;
-        indice++;
-    }
-
-    cout << endl;
-
-    delete []empleado;
-    delete []posEmpleado;
-
-    system("pause");
+	system("pause");
 }
 
 void ServicioEmpleado::ordenarPorApellido(Empleado empleado[], int tam)
 {
-    Empleado aux;
+	Empleado aux;
 
-    ///Ordenamiento por intercambio o SWAP, similar al burbujeo, sacado del libro pag 428
-    for(int i=0; i<tam-1; i++)
-    {
-        for(int j=i+1; j<tam; j++)
-        {
-            if(strcmp(empleado[i].getApellido().c_str(), empleado[j].getApellido().c_str()) > 0)
-            {
-                aux = empleado[i];
-                empleado[i] = empleado[j];
-                empleado[j] = aux;
-            }
-        }
-    }
+	///Ordenamiento por intercambio o SWAP, similar al burbujeo, sacado del libro pag 428
+	for (int i = 0; i < tam - 1; i++)
+	{
+		for (int j = i + 1; j < tam; j++)
+		{
+			if (strcmp(empleado[i].getApellido().c_str(), empleado[j].getApellido().c_str()) > 0)
+			{
+				aux = empleado[i];
+				empleado[i] = empleado[j];
+				empleado[j] = aux;
+			}
+		}
+	}
 }
 
 void ServicioEmpleado::ordenarPorDni(Empleado empleado[], int tam)
 {
-    Empleado aux;
+	Empleado aux;
 
-    for(int i=0; i<tam-1; i++)
-    {
-        for(int j=i+1; j<tam; j++)
-        {
-            if(empleado[i].getDni() > empleado[j].getDni())
-            {
-                aux = empleado[i];
-                empleado[i] = empleado[j];
-                empleado[j] = aux;
-            }
-        }
-    }
+	for (int i = 0; i < tam - 1; i++)
+	{
+		for (int j = i + 1; j < tam; j++)
+		{
+			if (empleado[i].getDni() > empleado[j].getDni())
+			{
+				aux = empleado[i];
+				empleado[i] = empleado[j];
+				empleado[j] = aux;
+			}
+		}
+	}
 }

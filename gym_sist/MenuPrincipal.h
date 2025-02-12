@@ -5,10 +5,10 @@ class MenuPrincipal
 {
     public:
         MenuPrincipal();
-        void mostrarMenuInicio();
+        void mostrarMenuPrincipal();
     
     protected:
-        int _opcion;
-        UsuarioAutenticado _usuario;
+        int opcion;
+        UsuarioAutenticado user;
 };
 

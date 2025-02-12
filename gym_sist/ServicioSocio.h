@@ -1,13 +1,13 @@
 #pragma once
 #include "ArchivoSocios.h"
-//#include "ArchivoEmpleados.h"
+#include "ArchivoEmpleados.h"
 
 class ServicioSocio
 {
     public:
         ServicioSocio();
 
-        int autoGenerarId();
+        int generarId();
         void agregarSocio();
         void verSociosPorId();
         void verSociosPorApellido();
@@ -21,18 +21,19 @@ class ServicioSocio
         void modificarSocio();
 
         void mostrarTurno(int idTurno); 
-        //void mostrarSociosPorEntrenador(int idEntrenador);
+        void listarSociosPorEntrenador(int idEntrenador);
+        void listarSociosSinEntrenador();
 
         std::string paseToStr(int idMemb);
         int seleccionarPase();
         
         void actualizarEstadoDelSocio(int idSocio, bool estado); 
-        //void mostrarFechaVencimiento(Fecha fechaIngreso, int idSocio); //necesito serviciopagos
-        //bool consultarEstadoDeSocio(int idSocio);                      //necesito serviciopagos
         
-        //void verListaDeSociosSinEntrenador(); //ncesito empleado
-        //void verListaDeSociosSinRutina(int idEntrenador); //ncesito empleado
-        //void asignarUnaRutina(int idEntrenador); //ncesito empleado
+        void listarSociosSinRutina(int idEntrenador); 
+        void asignarRutina(int idEntrenador);
+
+        void mostrarFechaVencimiento(Fecha fechaIngreso, int idSocio);
+        bool consultarEstadoDeSocio(int idSocio);
 
         //void generarCSV(Socio socios[], int cantReg);
 
@@ -40,10 +41,10 @@ class ServicioSocio
         void modificarContrasenia(int idSocio);
         void verEntrenadorAsignado(int idSocio);
         void verHorarios();
-        void verMembresia(int idSocio);
+        void verPase(int idSocio);
 
     private:
-        ArchivoSocios _archivoSocio;
-        //ArchivoEmpleados _archivoEmpleado;
+        ArchivoSocios archivoSocio;
+        ArchivoEmpleados archivoEmpleado;
 };
 

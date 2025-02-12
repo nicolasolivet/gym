@@ -7,137 +7,97 @@ ArchivoEjercicios::ArchivoEjercicios(){}
 
 ArchivoEjercicios::ArchivoEjercicios(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+    archivoEjercicios = nombreArchivo;
 }
 
-bool ArchivoEjercicios::guardarEjercicio(Ejercicio ejercicio)
+bool ArchivoEjercicios::guardarReg(Ejercicio ejercicio)
 {
-    bool guardo;
-    FILE *pArchivo;
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "ab");
+    if (pfile == nullptr) { return false; }
+    
+    bool guardado = fwrite(&ejercicio, sizeof(Ejercicio), 1, pfile);
+    fclose(pfile);
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "ab");
-
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    guardo = fwrite(&ejercicio, sizeof(Ejercicio), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+    return guardado;
 }
 
-bool ArchivoEjercicios::guardarEjercicio(Ejercicio ejercicio, int posicion)
+bool ArchivoEjercicios::modificarReg(Ejercicio ejercicio, int posicion)
 {
-    bool guardo;
-    FILE *pArchivo;
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "rb+");
+    if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb+");
+    fseek(pfile, sizeof(Ejercicio) * posicion, SEEK_SET);
+    bool modificado = fwrite(&ejercicio, sizeof(Ejercicio), 1, pfile);
+    fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    fseek(pArchivo, sizeof(Ejercicio) * posicion, SEEK_SET);
-
-    guardo = fwrite(&ejercicio, sizeof(Ejercicio), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+    return modificado;
 }
 
-int ArchivoEjercicios::buscarEjercicio(int idEjercicio)
+int ArchivoEjercicios::buscarReg(int idEjercicio)
 {
     int posicion = 0;
     Ejercicio ejercicio;
 
-    FILE *pArchivo;
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "rb");
+    if (pfile == nullptr) { return -2; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    while(fread(&ejercicio, sizeof(Ejercicio), 1, pArchivo))
+    while(fread(&ejercicio, sizeof(Ejercicio), 1, pfile))
     {
         if(ejercicio.getIdEjercicio() == idEjercicio)
         {
-            fclose(pArchivo);
+            fclose(pfile);
             return posicion;
         }
         posicion++;
     }
-
-    fclose(pArchivo);
+    fclose(pfile);
 
     return -1;
 }
 
-Ejercicio ArchivoEjercicios::leerRegistroEjercicio(int posicion)
+Ejercicio ArchivoEjercicios::leerReg(int posicion)
 {
     Ejercicio ejercicio;
 
-    FILE *pArchivo;
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "rb");
+    if (pfile == nullptr) { return Ejercicio(); }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return Ejercicio();
-    }
-
-    fseek(pArchivo, sizeof(Ejercicio) * posicion, SEEK_SET);
-
-    fread(&ejercicio, sizeof(Ejercicio), 1, pArchivo);
-
-    fclose(pArchivo);
+    fseek(pfile, sizeof(Ejercicio) * posicion, SEEK_SET);
+    fread(&ejercicio, sizeof(Ejercicio), 1, pfile);
+    fclose(pfile);
 
     return ejercicio;
 }
 
-int ArchivoEjercicios::cantidadRegistrosEjercicios()
+int ArchivoEjercicios::cantidadRegistros()
 {
     int cantidad;
 
-    FILE *pArchivo;
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "rb");
+    if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    fseek(pArchivo, 0, SEEK_END);
-
-    cantidad = ftell(pArchivo) / sizeof(Ejercicio);
-
-    fclose(pArchivo);
+    fseek(pfile, 0, SEEK_END);
+    cantidad = ftell(pfile) / sizeof(Ejercicio);
+    fclose(pfile);
 
     return cantidad;
 }
 
-void ArchivoEjercicios::leerRegistrosEjercicio(int cantidadRegistros, Ejercicio *vecEjercicio)
+void ArchivoEjercicios::leerRegistros(int cantidadRegistros, Ejercicio *ejercicios)
 {
-    FILE *pArchivo;
-
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return;
-    }
+    FILE *pfile;
+    pfile = fopen(archivoEjercicios.c_str(), "rb");
+    if (pfile == nullptr) { return; }
 
     for(int i = 0; i < cantidadRegistros; i++)
     {
-        fread(&vecEjercicio[i], sizeof(Ejercicio), 1, pArchivo);
+        fread(&ejercicios[i], sizeof(Ejercicio), 1, pfile);
     }
 
-    fclose(pArchivo);
+    fclose(pfile);
 }

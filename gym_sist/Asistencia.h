@@ -9,12 +9,10 @@ class Asistencia
     
         int getIdSocio();
         Fecha getFecha();
-    
-        //int getIdActividad();
-    
         void setIdSocio(int idSocio);
         void setFecha(Fecha fecha);
     
+        //int getIdActividad();
         //void setIdActividad(int idActividad);
     
     private:

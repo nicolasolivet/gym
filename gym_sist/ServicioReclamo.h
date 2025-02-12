@@ -6,13 +6,13 @@ class ServicioReclamo
     public:
         ServicioReclamo();
 
-        int autoGenerarIdReclamo();
+        int generarIdReclamo();
         void iniciarReclamo(int idUsuario);
-        void mostrarReclamo(bool resuelto);
+        void mostrarReclamos(bool resuelto);
         void verReclamosUsuario(int idUsuario);
         void cambiarEstadoReclamo();
 
     private:
-        ArchivoReclamos _archivoReclamo;
+        ArchivoReclamos archivoReclamos;
 };
 

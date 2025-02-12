@@ -78,9 +78,7 @@ bool ArchivoReclamos::modificarReg(Reclamo& r, int pos)
 	return modificado;
 }
 
-
-///filtros
-int ArchivoReclamos::buscarReg(int idUsuario)
+int ArchivoReclamos::buscarReg(int idReclamo)
 {
 	Reclamo r;
 	int pos = 0;
@@ -91,7 +89,7 @@ int ArchivoReclamos::buscarReg(int idUsuario)
 
 	while (fread(&r, sizeof(Reclamo), 1, pfile) == 1)
 	{
-		if (r.getIdReclamo() == idUsuario)
+		if (r.getIdReclamo() == idReclamo)
 		{
 			break;
 		}
@@ -100,12 +98,13 @@ int ArchivoReclamos::buscarReg(int idUsuario)
 
 	fclose(pfile);
 
-	if (r.getIdReclamo() == idUsuario)
+	if (r.getIdReclamo() == idReclamo)
 		return pos;
 	else
 		return -1;
 }
 
+///filtros
 int ArchivoReclamos::cantidadReclamosPorUsuario(int cantidadRegistros, int idUsuario)
 {
 	int cont = 0;
@@ -129,7 +128,7 @@ int ArchivoReclamos::cantidadReclamosPorUsuario(int cantidadRegistros, int idUsu
 	return cont;
 }
 
-int ArchivoReclamos::leerReclamosPorUsuario(int cantidadRegistros, int vectReclamos[], int idUsuario)
+int ArchivoReclamos::reclamosPorUsuario(int cantidadRegistros, int vectReclamos[], int idUsuario)
 {
 	int indice = 0;
 	Reclamo reclamo;

@@ -6,7 +6,7 @@ class MenuGerente
 {
     public:
 
-        MenuGerente(UsuarioAutenticado _usuario);
+        MenuGerente(UsuarioAutenticado usuario);
 
         void mostrarMenuGerente();
         void gestionarSocios();
@@ -23,5 +23,5 @@ class MenuGerente
         void comprobarEstadoDeGerente();
 
     private:
-        UsuarioAutenticado _usuario;
+        UsuarioAutenticado usuario;
 };

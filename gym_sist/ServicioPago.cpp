@@ -9,7 +9,7 @@ using namespace std;
 
 ServicioPago::ServicioPago()
 {
-	_archivoPago = ArchivoPagos("archivoPago.dat");
+	archivoPagos = ArchivoPagos("archivoPago.dat");
 }
 
 bool ServicioPago::verificarUltimoPago(int idSocio)
@@ -17,12 +17,12 @@ bool ServicioPago::verificarUltimoPago(int idSocio)
 	Pago pago;
 	Fecha fechaActual;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
-	int pos = _archivoPago.ultimoPagoSocio(cantPagos, idSocio);
+	int cantPagos = archivoPagos.cantidadRegistros();
+	int pos = archivoPagos.ultimoPagoSocio(cantPagos, idSocio);
 
 	if (pos != -1)
 	{
-		pago = _archivoPago.leerReg(pos);
+		pago = archivoPagos.leerReg(pos);
 		if (pago.getPeriodo().getMes() + 1 == fechaActual.getMes())
 		{
 			return true;
@@ -49,45 +49,50 @@ bool ServicioPago::registrarPago(int idSocio, int idPase, Fecha periodo)
 
 	if (verificarUltimoPago(idSocio))
 	{
-		cout << " +-----------------------+" << endl;
-		cout << " |   No presenta deuda   |" << endl;
-		cout << " +-----------------------+" << endl;
-		cout << " " << endl;
+		cout << "   +-----------------------------+" << endl;
+		cout << "   |      No presenta deuda      |" << endl;
+		cout << "   +-----------------------------+" << endl;
+		cout << endl;
 		system("pause");
 		return false;
 	}
+	
+	// tener en cuenta que tengo que programar el cambio de anio como asi lo con el mes //
+	int mes = fechaActual.getMes();
+	if (mes != 12)
+		periodo.setMes(mes + 1);
+	else
+		periodo.setMes(1);
 
-	int mes = fechaActual.getMes(); // corregir como calcula fecha. si yo pago el mes de dicimebre en diciembre no me lo esta tomando
-	periodo.setMes(mes + 1);
 
-	cout << "+-----------------------+" << endl;
-	cout << "|   PAGAR MENSUALIDAD   |" << endl;
-	cout << "+-----------------------+" << endl;
+	cout << "   +-----------------------+" << endl;
+	cout << "   |      PAGAR CUOTA      |" << endl;
+	cout << "   +-----------------------+" << endl;
 
-	cout << "  Pase actual : " << endl;
+	cout << "  Pase actual: " << endl;
 	switch (idPase)
 	{
 	case 0:
-		cout << "  Corro media cuadra y necesito respirador : $ 25.000" << endl;
+		cout << "  Corro media cuadra y necesito respirador : $ 25.000.-" << endl;
 		break;
 	case 1:
-		cout << "  Me hago unas dominadas                   : $ 35.000" << endl;
+		cout << "  Me hago unas dominadas                   : $ 35.000.-" << endl;
 		break;
 	case 2:
-		cout << "  Soy el hijo de Swarzenneger              : $ 40.000" << endl;
+		cout << "  Soy el hijo de Swarzenneger              : $ 40.000.-" << endl;
 		break;
 	}
 
 	cout << endl;
 	cout << "  1. Confirmar pago " << endl;
-	cout << "  2. Cambiar de pase? " << endl;
+	cout << "  2. Cambiar de pase " << endl;
 	cout << endl;
 	cout << "  Su seleccion: ";
 	cin >> opc;
 
 	if (opc == 2)
 	{
-		cout << "  Pases disponibles: " << endl;
+		cout << "   --- Pases disponibles --- " << endl;
 		cout << endl;
 		cout << "  0. Corro media cuadra y necesito respirador : $ 25.000 - " << endl;
 		cout << "  1. Me hago unas dominadas                   : $ 35.000 - " << endl;
@@ -112,7 +117,7 @@ bool ServicioPago::registrarPago(int idSocio, int idPase, Fecha periodo)
 
 	Pago pago(idSocio, monto, periodo, fechaActual);
 
-	if (_archivoPago.guardarReg(pago))
+	if (archivoPagos.guardarReg(pago))
 	{
 		system("cls");
 		cout << "+-------------------------------------------------+" << endl;
@@ -124,9 +129,9 @@ bool ServicioPago::registrarPago(int idSocio, int idPase, Fecha periodo)
 	else
 	{
 		system("cls");
-		cout << "+------------------------------------------------------------------+" << endl;
-		cout << "|      --- Su pago no se pudo realizar, prueba mas tarde ---		|" << endl;
-		cout << "+------------------------------------------------------------------+" << endl;
+		cout << "+------------------------------------------------------------------------------+" << endl;
+		cout << "|			Hubo un error, su pago no se registro. Volve a intentarlo			|" << endl;
+		cout << "+------------------------------------------------------------------------------+" << endl;
 		return false;
 	}
 }
@@ -136,33 +141,33 @@ void ServicioPago::verPagosPorSocio(int idSocio)
 	system("cls");
 
 	Pago pago;
-	int cantPagos = _archivoPago.cantidadRegistros();
-	int cantPagosSocio = _archivoPago.cantidadPagosPorSocio(cantPagos, idSocio);
+	int cantPagos = archivoPagos.cantidadRegistros();
+	int cantPagosSocio = archivoPagos.cantidadPagosPorSocio(cantPagos, idSocio);
 
 	int* pagosPorSocio;
 	pagosPorSocio = new int[cantPagosSocio];
 	if (pagosPorSocio == nullptr) { return; }
 
-	*pagosPorSocio = _archivoPago.leerPagosPorSocio(cantPagos, pagosPorSocio, idSocio);
+	*pagosPorSocio = archivoPagos.leerPagosPorSocio(cantPagos, pagosPorSocio, idSocio);
 
 	if (cantPagosSocio > 0)
 	{
 		for (int i = 0; i < cantPagosSocio; i++)
 		{
-			pago = _archivoPago.leerReg(pagosPorSocio[i]);
-			cout << "+--------------------------+" << endl;
-			cout << "| ID #" << pago.getIdUsuario() << endl;
-			cout << "| Fecha de pago: " << pago.getFechaPago().toString() << endl;
-			cout << "| Monto: $" << pago.getMonto() << endl;
-			cout << "+--------------------------+" << endl;
+			pago = archivoPagos.leerReg(pagosPorSocio[i]);
+			cout << "   +--------------------------+" << endl;
+			cout << "   | ID #" << pago.getIdUsuario() << endl;
+			cout << "   | Fecha de pago: " << pago.getFechaPago().toString() << endl;
+			cout << "   | Monto: $" << pago.getMonto() << endl;
+			cout << "   +--------------------------+" << endl;
 		}
 
 	}
 	else
 	{
-		cout << "+-------------------------+" << endl;
-		cout << "|  No se registran pagos  |" << endl;
-		cout << "+-------------------------+" << endl;
+		cout << "   +-----------------------------------+" << endl;
+		cout << "   |   --- No se registran pagos ---   |" << endl;
+		cout << "   +-----------------------------------+" << endl;
 	}
 
 	delete[]pagosPorSocio;
@@ -190,16 +195,16 @@ void ServicioPago::verPagosPorMes()
 	cout << "   Ingresa un anio: " << endl;
 	cin >> anio;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
+	int cantPagos = archivoPagos.cantidadRegistros();
 
 	for (int i = 0; i < cantPagos; i++)
 	{
-		pago = _archivoPago.leerReg(i);
+		pago = archivoPagos.leerReg(i);
 		if (pago.getFechaPago().getMes() == mes && pago.getFechaPago().getAnio() == anio)
 		{
 			cout << "   +----------------------------+" << endl;
 			cout << "   | Fecha de pago: " << pago.getFechaPago().toString() << endl;
-			cout << "   | ID#          : " << pago.getIdUsuario() << endl;
+			cout << "   | ID #          : " << pago.getIdUsuario() << endl;
 			cout << "   | Monto        : $ " << pago.getMonto() << endl;
 			cout << "   +----------------------------+" << endl;
 		}
@@ -236,10 +241,10 @@ void ServicioPago::verPagosPorAnio()
 	cout << "  Ingresa el anio" << endl;
 	cin >> anio;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
+	int cantPagos = archivoPagos.cantidadRegistros();
 	for (int i = 0; i < cantPagos; i++)
 	{
-		pago = _archivoPago.leerReg(i);
+		pago = archivoPagos.leerReg(i);
 		if (pago.getFechaPago().getAnio() == anio)
 		{
 			cout << "   +----------------------------+" << endl;
@@ -270,7 +275,7 @@ void ServicioPago::verPagosPorAnio()
 		contador = 0;
 	}
 
-
+	system("pause");
 }
 
 void ServicioPago::verIngresosAnuales()
@@ -289,13 +294,13 @@ void ServicioPago::verIngresosAnuales()
 	cout << " Ingrese anio de consulta: ";
 	cin >> anio;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
+	int cantPagos = archivoPagos.cantidadRegistros();
 
 	if (cantPagos > 0)
 	{
 		for (int i = 0; i < cantPagos; i++)
 		{
-			pago = _archivoPago.leerReg(i);
+			pago = archivoPagos.leerReg(i);
 
 			if (pago.getFechaPago().getAnio() == anio)
 			{
@@ -313,9 +318,9 @@ void ServicioPago::verIngresosAnuales()
 	}
 
 	cout << endl;
-	cout << "   +--------------------------------------------------+" << endl;
-	cout << "   |   MES                 ||             INGRESOS    |" << endl;
-	cout << "   +--------------------------------------------------+" << endl;
+	cout << "   +-----------------------------------------------------+" << endl;
+	cout << "   |     MES                ||              INGRESOS     |" << endl;
+	cout << "   +-----------------------------------------------------+" << endl;
 
 	for (int b = 0; b < 12; b++)
 	{
@@ -386,13 +391,13 @@ void ServicioPago::verIngresosMensuales()
 	cin >> mes;
 	cout << endl;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
+	int cantPagos = archivoPagos.cantidadRegistros();
 
 	if (cantPagos > 0)
 	{
 		for (int r = 0; r < cantPagos; r++)
 		{
-			pago = _archivoPago.leerReg(r);
+			pago = archivoPagos.leerReg(r);
 			if (pago.getFechaPago().getAnio() == anio && pago.getFechaPago().getMes() == mes)
 			{
 				montoTotal += pago.getMonto();
@@ -433,18 +438,18 @@ void ServicioPago::verIngresosAnualesPorSocio()
 	cin >> anio;
 	//cout << endl;
 	cout << "   Ingrese id del socio: ";
-	cin >> idSocio; 
+	cin >> idSocio;
 	cout << endl;
 	cout << endl;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
-	//int cantPagosSocio = _archivoPago.cantidadPagosPorSocio(cantPagos, idSocio);
+	int cantPagos = archivoPagos.cantidadRegistros();
+	//int cantPagosSocio = archivoPagos.cantidadPagosPorSocio(cantPagos, idSocio);
 
 	if (cantPagos > 0)
 	{
 		for (int i = 0; i < cantPagos; i++)
 		{
-			pago = _archivoPago.leerReg(i);
+			pago = archivoPagos.leerReg(i);
 			socio = ss.buscarSocio(idSocio);
 
 			if (pago.getFechaPago().getAnio() == anio && pago.getIdUsuario() == idSocio)
@@ -454,12 +459,18 @@ void ServicioPago::verIngresosAnualesPorSocio()
 			}
 			//contador++;
 		}
-		
+
 		cout << "   Socio:  " << socio.getNombre() + " " + socio.getApellido() << endl;
 		cout << "   Ingresos totales del anio " << anio << ": " << montoTotal << endl;
 		cout << "   Cantidad de meses:  " << cantMeses << endl;
 		//cout << " " << left << setw(26) << socio.getNombre() + " " + socio.getApellido() << "| " << right << setw(15) << fixed << setprecision(2) << "$ " << montoTotal << " | " << setw(15) << cantMeses << " |" << endl;
 		cout << string(75, '-') << endl;
+	}
+	else
+	{
+		cout << "+---------------------------------------------------+" << endl;
+		cout << "|  No hubo pagos en el anio para el socio ingresado |" << endl;
+		cout << "+---------------------------------------------------+" << endl;
 	}
 
 	/*if (contador == 0)
@@ -471,6 +482,7 @@ void ServicioPago::verIngresosAnualesPorSocio()
 		system("pause");
 		return;
 	}*/
+	system("pause");
 }
 
 int ServicioPago::cantidadDeDiasDelUltimoPago(int idSocio)
@@ -478,12 +490,12 @@ int ServicioPago::cantidadDeDiasDelUltimoPago(int idSocio)
 	Pago pago;
 	Fecha fechaActual;
 
-	int cantPagos = _archivoPago.cantidadRegistros();
-	int pos = _archivoPago.ultimoPagoSocio(cantPagos, idSocio);
+	int cantPagos = archivoPagos.cantidadRegistros();
+	int pos = archivoPagos.ultimoPagoSocio(cantPagos, idSocio);
 
 	if (pos == -1)
 	{
-		pago = _archivoPago.leerReg(pos);
+		pago = archivoPagos.leerReg(pos);
 
 		if (pago.getFechaPago().getAnio() >= fechaActual.getAnio() && pago.getPeriodo().getMes() >= fechaActual.getMes())
 		{
@@ -495,67 +507,69 @@ int ServicioPago::cantidadDeDiasDelUltimoPago(int idSocio)
 
 void ServicioPago::mostrarListaDePagosPorTipoDePase()
 {
-		system("cls");
-		Pago pago;
-		int pase;
-		float monto;
+	system("cls");
+	Pago pago;
+	int pase;
+	float monto;
 
-		int contador = 0;
+	int contador = 0;
 
-		cout << "   +-----------------------------------+" << endl;
-		cout << "   |       PAGOS POR TIPO DE PASE      |" << endl;
-		cout << "   +-----------------------------------+" << endl;
-		cout << endl;
-		cout << "  0 - Full | 1 - Smart | 2 - Fit " << endl;
-		cout << "  Su seleccion: ";
-		cin >> pase;
+	cout << "   +-----------------------------------+" << endl;
+	cout << "   |       PAGOS POR TIPO DE PASE      |" << endl;
+	cout << "   +-----------------------------------+" << endl;
+	cout << endl;
+	cout << "  0. Te corro medio cuadra y necesito respirador " << endl;
+	cout << "  1. Me hago unas dominadas " << endl;
+	cout << "  2. Soy el hijo de Swarzenneger " << endl;
+	cout << "  Su seleccion: ";
+	cin >> pase;
 
-		switch (pase)
+	switch (pase)
+	{
+	case 0:
+		monto = 55000;
+		break;
+	case 1:
+		monto = 35000;
+		break;
+	case 2:
+		monto = 25000;
+		break;
+	}
+
+	int cantidad = archivoPagos.cantidadRegistros();
+
+	
+	for (int i = 0; i < cantidad; i++)
+	{
+		pago = archivoPagos.leerReg(i);
+
+		if (pago.getMonto() == monto)
 		{
-		case 0:
-			monto = 55000;
-			break;
-		case 1:
-			monto = 35000;
-			break;
-		case 2:
-			monto = 25000;
-			break;
-		}
-
-		int cantidad = _archivoPago.cantidadRegistros();
-
-		cout << "+-----------------------------------+" << endl;
-		for (int i = 0; i < cantidad; i++)
-		{
-			pago = _archivoPago.leerReg(i);
-
-			if (pago.getMonto() == monto)
+			cout << "   +-----------------------------------+" << endl;
+			cout << "   | Fecha : " << pago.getFechaPago().toString() << endl;
+			cout << "   | ID    : #" << pago.getIdUsuario() << endl;
+			cout << "   | Monto : $" << pago.getMonto() << endl;
+			cout << "   +-----------------------------------+" << endl;
+			contador++;
+			if (contador % 10 == 0)
 			{
-				cout << " Fecha : " << pago.getFechaPago().toString() << endl;
-				cout << " ID    : #" << pago.getIdUsuario() << endl;
-				cout << " Monto : $" << pago.getMonto() << endl;
-				cout << "+-----------------------------------+" << endl;
-				contador++;
-				if (contador % 10 == 0)
-				{
-					cout << " Siguiente pagina...." << endl;
-					system("pause");
-					system("cls");
-				}
+				cout << " Siguiente pagina...." << endl;
+				system("pause");
+				system("cls");
 			}
 		}
+	}
 
-		if (contador == 0)
-		{
-			system("cls");
-			cout << "+------------------------------------------+" << endl;
-			cout << "|  No hay registros para este tipo de pase |" << endl;
-			cout << "+------------------------------------------+" << endl;
-		}
+	if (contador == 0)
+	{
+		system("cls");
+		cout << "   +------------------------------------------+" << endl;
+		cout << "   |  No hay registros para este tipo de pase |" << endl;
+		cout << "   +------------------------------------------+" << endl;
+	}
 
-		system("pause");
-
+	system("pause");
 }
 
 

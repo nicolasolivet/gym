@@ -8,15 +8,14 @@ class ArchivoActividades
         ArchivoActividades();
         ArchivoActividades(std::string nombreArchivo);
     
-        bool guardarActividad(Actividad actividad);
-        bool guardarActividad(Actividad actividad, int posicion);
-        int buscarActividad(int idActividad);
-        Actividad leerRegistroActividad(int posicion);
-        int cantidadRegistrosActividades();
-        void leerRegistrosActividades(int cantidadRegistros, Actividad *vecActividad);
+        bool guardarReg(Actividad actividad);
+        bool modificarReg(Actividad actividad, int posicion);
+        Actividad leerReg(int posicion);
+        int cantidadRegistros();
+        void leerRegistros(int cantidadRegistros, Actividad* actividades);
+        int buscarReg(int idActividad);
     
     private:
-    
-        std::string _nombreArchivo;
+        std::string archivoActividades;
 };
 

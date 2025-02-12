@@ -19,12 +19,12 @@ class UsuarioAutenticado
         bool getEstado();
 
     private:
-        int _idUsuario;
-        int _dni;
-        int _rol;
-        char _nombre[50];
-        char _apellido[50];
-        bool _estado;
-        Fecha _fechaNacimiento;
-        Fecha _fechaIngreso;
+        int idUsuario;
+        int dni;
+        int rol;
+        char nombre[50];
+        char apellido[50];
+        bool estado;
+        Fecha fechaNacimiento;
+        Fecha fechaIngreso;
 };

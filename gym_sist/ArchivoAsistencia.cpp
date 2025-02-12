@@ -1,143 +1,101 @@
 #include <iostream>
 #include "ArchivoAsistencia.h"
-
 using namespace std;
 
-ArchivoAsistencia::ArchivoAsistencia(){}
+ArchivoAsistencia::ArchivoAsistencia() {}
 
 ArchivoAsistencia::ArchivoAsistencia(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+	archivoAsistencia = nombreArchivo;
 }
 
-bool ArchivoAsistencia::guardarAsistencia(Asistencia asistencia)
+bool ArchivoAsistencia::guardarReg(Asistencia asistencia)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "ab");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "ab");
+	bool guardado = fwrite(&asistencia, sizeof(Asistencia), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    guardo = fwrite(&asistencia, sizeof(Asistencia), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return guardado;
 }
 
-bool ArchivoAsistencia::guardarAsistencia(Asistencia asistencia, int posicion)
+bool ArchivoAsistencia::modificarReg(Asistencia asistencia, int posicion)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "rb+");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb+");
+	fseek(pfile, sizeof(Asistencia) * posicion, SEEK_SET);
+	bool modificado = fwrite(&asistencia, sizeof(Asistencia), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    fseek(pArchivo, sizeof(Asistencia) * posicion, SEEK_SET);
-
-    guardo = fwrite(&asistencia, sizeof(Asistencia), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return modificado;
 }
 
-int ArchivoAsistencia::buscarAsistencia(int idSocio)
+Asistencia ArchivoAsistencia::leerReg(int posicion)
 {
-    int posicion = 0;
-    Asistencia asistencia;
+	Asistencia asistencia;
 
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "rb");
+	if (pfile == nullptr) { return Asistencia(); }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	fseek(pfile, sizeof(Asistencia) * posicion, SEEK_SET);
+	fread(&asistencia, sizeof(Asistencia), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    while(fread(&asistencia, sizeof(Asistencia), 1, pArchivo))
-    {
-        if(asistencia.getIdSocio() == idSocio)
-        {
-            fclose(pArchivo);
-            return posicion;
-        }
-        posicion++;
-    }
-
-    fclose(pArchivo);
-
-    return -1;
+	return asistencia;
 }
 
-Asistencia ArchivoAsistencia::leerRegistroAsistencia(int posicion)
+int ArchivoAsistencia::cantidadRegistros()
 {
-    Asistencia asistencia;
+	int cantidad;
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    FILE *pArchivo;
+	fseek(pfile, 0, SEEK_END);
+	cantidad = ftell(pfile) / sizeof(Asistencia);
+	fclose(pfile);
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return Asistencia();
-    }
-
-    fseek(pArchivo, sizeof(Asistencia) * posicion, SEEK_SET);
-
-    fread(&asistencia, sizeof(Asistencia), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return asistencia;
+	return cantidad;
 }
 
-int ArchivoAsistencia::cantidadRegistrosAsistencias()
+void ArchivoAsistencia::leerRegistros(int cantidadRegistros, Asistencia *asistencias)
 {
-    int cantidad;
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "rb");
+	if (pfile == nullptr) { return; }
+	
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&asistencias[i], sizeof(Asistencia), 1, pfile);
+	}
 
-    FILE *pArchivo;
-
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    fseek(pArchivo, 0, SEEK_END);
-
-    cantidad = ftell(pArchivo) / sizeof(Asistencia);
-
-    fclose(pArchivo);
-
-    return cantidad;
+	fclose(pfile);
 }
 
-void ArchivoAsistencia::leerRegistrosAsistencia(int cantidadRegistros, Asistencia *vecAsistencia)
+int ArchivoAsistencia::buscarReg(int idSocio)
 {
-    FILE *pArchivo;
+	int posicion = 0;
+	Asistencia asistencia;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoAsistencia.c_str(), "rb");
+	if (pfile == nullptr) { return -2; }
 
-    if(pArchivo == nullptr)
-    {
-        return;
-    }
+	while (fread(&asistencia, sizeof(Asistencia), 1, pfile))
+	{
+		if (asistencia.getIdSocio() == idSocio)
+		{
+			fclose(pfile);
+			return posicion;
+		}
+		posicion++;
+	}
+	fclose(pfile);
 
-    for(int i = 0; i < cantidadRegistros; i++)
-    {
-        fread(&vecAsistencia[i], sizeof(Asistencia), 1, pArchivo);
-    }
-
-    fclose(pArchivo);
+	return -1;
 }

@@ -1,22 +1,26 @@
 #pragma once
-
 #include "MenuPrincipal.h"
+#include "ServicioEmpleado.h"
+#include "ServicioSocio.h"
+#include "ServicioReclamo.h"
+#include "ServicioEjercicio.h"
+#include "ServicioRutina.h"
 
 class MenuEntrenador
 {
     public:
-    
         MenuEntrenador(UsuarioAutenticado usuario);
     
+        void comprobarEstadoDeEntrenador();
         void mostrarMenuEntrenador();
         void verHorariosYSociosAsignados();
         void crearModificarRutina();
         void verReclamos();
-        void modificarContrasenia();
-    
-        void comprobarEstadoDeEntrenador();
-    
+
     private:
-    
-        UsuarioAutenticado _usuario;
+        UsuarioAutenticado usuario;
+        ServicioReclamo    servReclamo;
+        ServicioRutina     servRutina;
+        ServicioEjercicio  servEjercicio;
+        ServicioEmpleado   servEmpleado;
 };

@@ -1,10 +1,7 @@
 #include <iostream>
 #include <cstring>
-
 #include "Ejercicio.h"
-
 using namespace std;
-
 
 Ejercicio::Ejercicio(){}
 
@@ -18,30 +15,30 @@ Ejercicio::Ejercicio(int idEjercicio, string nombreEjercicio, string descripcion
 
 void Ejercicio::setIdEjercicio(int idEjercicio)
 {
-    _idEjercicio = idEjercicio;
+    idEjercicio = idEjercicio;
 }
 
 void Ejercicio::setNombreEjercicio(string nombreEjercicio)
 {
-    strcpy(_nombreEjercicio, nombreEjercicio.c_str());
+    strcpy(this->nombreEjercicio, nombreEjercicio.c_str());
 }
 
 void Ejercicio::setDescripcion(string descripcion)
 {
-    strcpy(_descripcion, descripcion.c_str());
+    strcpy(this->descripcion, descripcion.c_str());
 }
 
 int Ejercicio::getIdEjercicio()
 {
-    return _idEjercicio;
+    return idEjercicio;
 }
 
 string Ejercicio::getNombreEjercicio()
 {
-    return _nombreEjercicio;
+    return nombreEjercicio;
 }
 
 string Ejercicio::getDescripcion()
 {
-    return _descripcion;
+    return descripcion;
 }

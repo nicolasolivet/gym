@@ -3,140 +3,103 @@
 
 using namespace std;
 
-ArchivoActividades::ArchivoActividades(){}
+ArchivoActividades::ArchivoActividades() {}
 
 ArchivoActividades::ArchivoActividades(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+	archivoActividades = nombreArchivo;
 }
 
-bool ArchivoActividades::guardarActividad(Actividad actividad)
+bool ArchivoActividades::guardarReg(Actividad actividad)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "ab");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "ab");
+	bool guardado = fwrite(&actividad, sizeof(Actividad), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    guardo = fwrite(&actividad, sizeof(Actividad), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return guardado;
 }
 
-bool ArchivoActividades::guardarActividad(Actividad actividad, int posicion)
+bool ArchivoActividades::modificarReg(Actividad actividad, int posicion)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "rb+");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb+");
+	fseek(pfile, sizeof(Actividad) * posicion, SEEK_SET);
+	bool modificado = fwrite(&actividad, sizeof(Actividad), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    fseek(pArchivo, sizeof(Actividad) * posicion, SEEK_SET);
-
-    guardo = fwrite(&actividad, sizeof(Actividad), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return modificado;
 }
 
-int ArchivoActividades::buscarActividad(int idActividad)
+Actividad ArchivoActividades::leerReg(int posicion)
 {
-    int posicion = 0;
-    Actividad actividad;
-    FILE *pArchivo;
+	Actividad actividad;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "rb");
+	if (pfile == nullptr) { return Actividad(); }
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
+	fseek(pfile, sizeof(Actividad) * posicion, SEEK_SET);
+	fread(&actividad, sizeof(Actividad), 1, pfile);
+	fclose(pfile);
 
-    while(fread(&actividad, sizeof(Actividad), 1, pArchivo))
-    {
-        if(actividad.getIdActividad() == idActividad)
-        {
-            fclose(pArchivo);
-            return posicion;
-        }
-        posicion++;
-    }
-
-    fclose(pArchivo);
-
-    return -1;
+	return actividad;
 }
 
-Actividad ArchivoActividades::leerRegistroActividad(int posicion)
+int ArchivoActividades::cantidadRegistros()
 {
-    Actividad actividad;
-    FILE *pArchivo;
+	int cantidad;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    if(pArchivo == nullptr)
-    {
-        return Actividad();
-    }
+	fseek(pfile, 0, SEEK_END);
+	cantidad = ftell(pfile) / sizeof(Actividad);
+	fclose(pfile);
 
-    fseek(pArchivo, sizeof(Actividad) * posicion, SEEK_SET);
-
-    fread(&actividad, sizeof(Actividad), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return actividad;
+	return cantidad;
 }
 
-int ArchivoActividades::cantidadRegistrosActividades()
+void ArchivoActividades::leerRegistros(int cantidadRegistros, Actividad* actividades)
 {
-    int cantidad;
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "rb");
+	if (pfile == nullptr) { return; }
 
-    FILE *pArchivo;
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&actividades[i], sizeof(Actividad), 1, pfile);
+	}
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    fseek(pArchivo, 0, SEEK_END);
-
-    cantidad = ftell(pArchivo) / sizeof(Actividad);
-
-    fclose(pArchivo);
-
-    return cantidad;
+	fclose(pfile);
 }
 
-void ArchivoActividades::leerRegistrosActividades(int cantidadRegistros, Actividad *vecActividad)
+int ArchivoActividades::buscarReg(int idActividad)
 {
-    FILE *pArchivo;
+	int posicion = 0;
+	Actividad actividad;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoActividades.c_str(), "rb");
+	if (pfile == nullptr) { return -2; }
 
-    if(pArchivo == nullptr)
-    {
-        return;
-    }
+	while (fread(&actividad, sizeof(Actividad), 1, pfile))
+	{
+		if (actividad.getIdActividad() == idActividad)
+		{
+			fclose(pfile);
+			return posicion;
+		}
+		posicion++;
+	}
 
-    for(int i = 0; i < cantidadRegistros; i++)
-    {
-        fread(&vecActividad[i], sizeof(Actividad), 1, pArchivo);
-    }
+	fclose(pfile);
 
-    fclose(pArchivo);
+	return -1;
 }
 

@@ -20,9 +20,9 @@ class Rutina
         std::string getDescripcion();
 
     private:
-        int _idRutina;
-        int _frecuenciaSemanal;
-        int _idEntrenador;
-        char _nombreRutina[30];
-        char _descripcion[100];
+        int idRutina;
+        int frecuenciaSemanal;
+        int idEntrenador;
+        char nombreRutina[30];
+        char descripcion[100];
 };

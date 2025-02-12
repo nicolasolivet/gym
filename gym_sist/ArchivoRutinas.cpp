@@ -1,203 +1,150 @@
 #include <iostream>
 #include "ArchivoRutinas.h"
-
 using namespace std;
 
 ArchivoRutinas::ArchivoRutinas() {}
 
 ArchivoRutinas::ArchivoRutinas(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+	archivoRutinas = nombreArchivo;
 }
 
-bool ArchivoRutinas::guardarRutina(Rutina rutina)
+bool ArchivoRutinas::guardarReg(Rutina rutina)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "ab");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "ab");
+	bool guardado = fwrite(&rutina, sizeof(Rutina), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    guardo = fwrite(&rutina, sizeof(Rutina), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return guardado;
 }
 
-bool ArchivoRutinas::guardarRutina(Rutina rutina, int posicion)
+bool ArchivoRutinas::modificarReg(Rutina rutina, int posicion)
 {
-    bool guardo;
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb+");
+	if (pfile == nullptr) { return false; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb+");
+	fseek(pfile, sizeof(Rutina) * posicion, SEEK_SET);
+	bool modificado = fwrite(&rutina, sizeof(Rutina), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return false;
-    }
-
-    fseek(pArchivo, sizeof(Rutina) * posicion, SEEK_SET);
-
-    guardo = fwrite(&rutina, sizeof(Rutina), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return guardo;
+	return modificado;
 }
 
-int ArchivoRutinas::buscarRutina(int idRutina)
+Rutina ArchivoRutinas::leerReg(int posicion)
 {
-    int posicion = 0;
-    Rutina rutina;
+	Rutina rutina;
 
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return Rutina(); }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	fseek(pfile, sizeof(Rutina) * posicion, SEEK_SET);
+	fread(&rutina, sizeof(Rutina), 1, pfile);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    while(fread(&rutina, sizeof(Rutina), 1, pArchivo))
-    {
-        if(rutina.getIdRutina() == idRutina)
-        {
-            fclose(pArchivo);
-            return posicion;
-        }
-        posicion++;
-    }
-
-    fclose(pArchivo);
-
-    return -1;
+	return rutina;
 }
 
-Rutina ArchivoRutinas::leerRegistroRutina(int posicion)
+int ArchivoRutinas::cantidadRegistros()
 {
-    Rutina rutina;
+	int cantidad;
 
-    FILE *pArchivo;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	fseek(pfile, 0, SEEK_END);
+	cantidad = ftell(pfile) / sizeof(Rutina);
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return Rutina();
-    }
-
-    fseek(pArchivo, sizeof(Rutina) * posicion, SEEK_SET);
-
-    fread(&rutina, sizeof(Rutina), 1, pArchivo);
-
-    fclose(pArchivo);
-
-    return rutina;
+	return cantidad;
 }
 
-int ArchivoRutinas::cantidadRegistrosRutinas()
+void ArchivoRutinas::leerRegistros(int cantidadRegistros, Rutina* rutinas)
 {
-    int cantidad;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return; }
 
-    FILE *pArchivo;
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&rutinas[i], sizeof(Rutina), 1, pfile);
+	}
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
-
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    fseek(pArchivo, 0, SEEK_END);
-
-    cantidad = ftell(pArchivo) / sizeof(Rutina);
-
-    fclose(pArchivo);
-
-    return cantidad;
+	fclose(pfile);
 }
 
-void ArchivoRutinas::leerRegistrosRutina(int cantidadRegistros, Rutina *vecRutina)
+int ArchivoRutinas::buscarReg(int idRutina)
 {
-    FILE *pArchivo;
+	int posicion = 0;
+	Rutina rutina;
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    if(pArchivo == nullptr)
-    {
-        return;
-    }
+	while (fread(&rutina, sizeof(Rutina), 1, pfile))
+	{
+		if (rutina.getIdRutina() == idRutina)
+		{
+			fclose(pfile);
+			return posicion;
+		}
+		posicion++;
+	}
+	fclose(pfile);
 
-    for(int i = 0; i < cantidadRegistros; i++)
-    {
-        fread(&vecRutina[i], sizeof(Rutina), 1, pArchivo);
-    }
-
-    fclose(pArchivo);
+	return -1;
 }
 
-int ArchivoRutinas::cantidadDeRegistrosPorEntrenador(int cantidadRegistros, int idEntrenador)
+
+int ArchivoRutinas::cantidadRutinasPorEntrenador(int cantidadRegistros, int idEntrenador)
 {
-    int cont = 0;
-    FILE *pArchivo;
+	int cont = 0;
+	Rutina rutina;
 
-    Rutina rutina;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&rutina, sizeof(Rutina), 1, pfile);
+		if (rutina.getIdEntrenador() == idEntrenador)
+		{
+			cont++;
+		}
+	}
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    for(int i=0; i<cantidadRegistros; i++)
-    {
-        fread(&rutina, sizeof(Rutina), 1, pArchivo);
-        if(rutina.getIdEntrenador() == idEntrenador)
-        {
-            cont++;
-        }
-    }
-
-    fclose(pArchivo);
-
-    return cont;
-
+	return cont;
 }
 
-int ArchivoRutinas::leerRegistrosRutinasPorEntrenador(int cantidadRegistros, int vectRutina[], int tam, int idEntrenador)
+int ArchivoRutinas::rutinasPorEntrenador(int cantidadRegistros, int rutinas[], int idEntrenador)
 {
-    int cont = 0, indice = 0;
-    FILE *pArchivo;
+	int indice = 0;
+	Rutina rutina;
 
-    Rutina rutina;
+	FILE* pfile;
+	pfile = fopen(archivoRutinas.c_str(), "rb");
+	if (pfile == nullptr) { return -1; }
 
-    pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	for (int i = 0; i < cantidadRegistros; i++)
+	{
+		fread(&rutina, sizeof(Rutina), 1, pfile);
+		if (rutina.getIdEntrenador() == idEntrenador)
+		{
+			rutinas[indice] = i;
+			indice++;
+		}
+	}
+	fclose(pfile);
 
-    if(pArchivo == nullptr)
-    {
-        return -1;
-    }
-
-    for(int i=0; i<cantidadRegistros; i++)
-    {
-        fread(&rutina, sizeof(Rutina), 1, pArchivo);
-        if(rutina.getIdEntrenador() == idEntrenador)
-        {
-            vectRutina[indice] = i;
-            indice++;
-        }
-    }
-
-    fclose(pArchivo);
-
-    return *vectRutina;
+	return *rutinas;
 }
 
 

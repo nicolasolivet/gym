@@ -8,14 +8,14 @@ ArchivoPagos::ArchivoPagos() {}
 
 ArchivoPagos::ArchivoPagos(std::string nombreArchivo)
 {
-	_nombreArchivo = nombreArchivo;
+	_archivoPagos = nombreArchivo;
 }
 
 bool ArchivoPagos::guardarReg(Pago& pago)
 {
 	bool guardado;
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "ab");
+	pfile = fopen(_archivoPagos.c_str(), "ab");
 	if (pfile == nullptr) { return false; }
 
 	guardado = fwrite(&pago, sizeof(Pago), 1, pfile);
@@ -28,7 +28,7 @@ Pago ArchivoPagos::leerReg(int pos)
 {
 	Pago pago;
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return pago; }
 
 	fseek(pfile, sizeof(Pago) * pos, SEEK_SET);
@@ -40,14 +40,12 @@ Pago ArchivoPagos::leerReg(int pos)
 
 bool ArchivoPagos::modificarReg(Pago& pago, int pos)
 {
-	bool modificado;
 	FILE* pfile;
-
-	pfile = fopen(_nombreArchivo.c_str(), "rb+");
+	pfile = fopen(_archivoPagos.c_str(), "rb+");
 	if (pfile == nullptr) { return false; }
 
 	fseek(pfile, sizeof(Pago) * pos, SEEK_SET);
-	modificado = fwrite(&pago, sizeof(Pago), 1, pfile);
+	bool modificado = fwrite(&pago, sizeof(Pago), 1, pfile);
 	fclose(pfile);
 
 	return modificado;
@@ -59,7 +57,7 @@ int ArchivoPagos::buscarReg(int id)
 	int pos = 0;
 
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return -1; }
 
 	while (fread(&pago, sizeof(Pago), 1, pfile) == 1)
@@ -89,7 +87,7 @@ int ArchivoPagos::cantidadRegistros()
 {
 	Pago pago;
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return 0; }
 
 	fseek(pfile, 0, SEEK_END);
@@ -102,7 +100,7 @@ int ArchivoPagos::cantidadRegistros()
 void ArchivoPagos::leerRegistros(int cantPagos, Pago* pagos)
 {
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return; }
 
 	for (int i = 0; i < cantPagos; i++)
@@ -114,13 +112,13 @@ void ArchivoPagos::leerRegistros(int cantPagos, Pago* pagos)
 } // este metodo no lo estoy usando, no lo pensamos para que se use de esta manera 
 
 
-int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario) //creo que tengo que agregar un vector de pagos por parametro
+int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario)
 {
 	Pago pago;
 	int cont = 0;
 
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return -1; }
 
 	for (int i = 0; i < cantPagos; i++)
@@ -131,21 +129,21 @@ int ArchivoPagos::cantidadPagosPorSocio(int cantPagos, int idUsuario) //creo que
 			cont++;
 		}
 	}
-
 	fclose(pfile);
+
 	return cont;
 }
 
-int ArchivoPagos::leerPagosPorSocio(int cantPagos, int pagosPorSocio[], int idUsuario)
+int ArchivoPagos::leerPagosPorSocio(int cantRegistros, int pagosPorSocio[], int idUsuario)
 {
 	Pago pago;
 	int index = 0;
 
 	FILE* pfile;
-	pfile = fopen(_nombreArchivo.c_str(), "rb");
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 	if (pfile == nullptr) { return -1; }
 
-	for (int i = 0; i < cantPagos; i++)
+	for (int i = 0; i < cantRegistros; i++)
 	{
 		fread(&pago, sizeof(Pago), 1, pfile);
 		if (pago.getIdUsuario() == idUsuario)
@@ -159,27 +157,29 @@ int ArchivoPagos::leerPagosPorSocio(int cantPagos, int pagosPorSocio[], int idUs
 	return *pagosPorSocio;
 }
 
-int ArchivoPagos::ultimoPagoSocio(int cantPagos, int idUsuario)
+int ArchivoPagos::ultimoPagoSocio(int cantRegistros, int idUsuario)
 {
 	Pago pago; 
 	int pos = -1;
-	FILE* pArchivo;
-	pArchivo = fopen(_nombreArchivo.c_str(), "rb");
+	FILE* pfile;
+	pfile = fopen(_archivoPagos.c_str(), "rb");
 
-	if (pArchivo == nullptr) { return -1; }
+	if (pfile == nullptr) { return -1; }
 
-	for (int i = 0; i < cantPagos; i++) 
+	for (int i = 0; i < cantRegistros; i++)
 	{
-		fread(&pago, sizeof(Pago), 1, pArchivo);
+		fread(&pago, sizeof(Pago), 1, pfile);
 		if (pago.getIdUsuario() == idUsuario)
 		{
 			pos = i; // el for va a dar x vueltas y en cada vuelta si encuentra una coincidencia la guarda, pisando la anterior
 		}
 	}
-
-	fclose(pArchivo);
+	fclose(pfile);
+	
 	return pos;
 }
+
+
 
 
 void ArchivoPagos::crearPago()

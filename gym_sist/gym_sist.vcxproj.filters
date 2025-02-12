@@ -86,6 +86,48 @@
     <ClCompile Include="MenuSocio.cpp">
       <Filter>menus</Filter>
     </ClCompile>
+    <ClCompile Include="DetalleRutina.cpp">
+      <Filter>clases\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoDetalleRutina.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoAsistencia.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoActividades.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoEjercicios.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoEmpleados.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchivoRutinas.cpp">
+      <Filter>archivos</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioActividad.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioAsistencia.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioEjercicio.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioEmpleado.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="ServicioRutina.cpp">
+      <Filter>servicios</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuEntrenador.cpp">
+      <Filter>menus</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuGerente.cpp">
+      <Filter>menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ServicioPago.h">
@@ -146,6 +188,48 @@
       <Filter>menus</Filter>
     </ClInclude>
     <ClInclude Include="MenuSocio.h">
+      <Filter>menus</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoDetalleRutina.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="DetalleRutina.h">
+      <Filter>clases\h</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoAsistencia.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoActividades.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoEjercicios.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoEmpleados.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchivoRutinas.h">
+      <Filter>archivos</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioActividad.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioAsistencia.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioEjercicio.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioEmpleado.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioRutina.h">
+      <Filter>servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuEntrenador.h">
+      <Filter>menus</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuGerente.h">
       <Filter>menus</Filter>
     </ClInclude>
   </ItemGroup>

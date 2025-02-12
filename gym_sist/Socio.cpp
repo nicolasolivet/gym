@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Socio::Socio(){}
+Socio::Socio() {}
 
 Socio::Socio(string nombre, string apellido, int dni, int idUsuario, Fecha fechaNacimiento, Fecha fechaIngreso, string contrasenia, bool estado, int idRol, int idPase, string estadoFisico, int idRutina, int idEntrenadorAsignado) : Usuario(nombre, apellido, dni, idUsuario, fechaNacimiento, fechaIngreso, contrasenia, estado, idRol)
 {
@@ -12,7 +12,6 @@ Socio::Socio(string nombre, string apellido, int dni, int idUsuario, Fecha fecha
     setEstadoFisico(estadoFisico);
     setIdRutina(idRutina);
     setIdEntrenadorAsignado(idEntrenadorAsignado);
-    //setPinIngreso(pinIngreso);
 }
 
 void Socio::setPase(int idPase)
@@ -34,11 +33,6 @@ void Socio::setIdEntrenadorAsignado(int idEntrenadorAsignado)
     _idEntrenadorAsignado = idEntrenadorAsignado;
 }
 
-//void Socio::setPinIngreso(int pinIngreso)
-//{
-//    _pinIngreso = pinIngreso;
-//}
-
 int Socio::getPase()
 {
     return _idPase;
@@ -59,7 +53,3 @@ int Socio::getIdEntrenadorAsignado()
     return _idEntrenadorAsignado;
 }
 
-//int Socio::getPinIngreso()
-//{
-//    return _pinIngreso;
-//}

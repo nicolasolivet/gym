@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "ServicioReclamo.h"
 #include "Reclamo.h"
 #include "Fecha.h"
@@ -8,12 +9,12 @@ using namespace std;
 
 ServicioReclamo::ServicioReclamo()
 {
-	_archivoReclamo = ArchivoReclamos("archivoReclamo.dat");
+	archivoReclamos = ArchivoReclamos("archivoReclamo.dat");
 }
 
-int ServicioReclamo::autoGenerarIdReclamo()
+int ServicioReclamo::generarIdReclamo()
 {
-	int cantidad = _archivoReclamo.cantidadRegistros();
+	int cantidad = archivoReclamos.cantidadRegistros();
 
 	if (cantidad != -1)
 		return cantidad + 1;
@@ -32,18 +33,18 @@ void ServicioReclamo::iniciarReclamo(int idUsuario)
 	cout << "	+-------------------------------------------+" << endl;
 	cout << "	|               NUEVO RECLAMO               |" << endl;
 	cout << "	+-------------------------------------------+" << endl;
-	cout << "	|        Por favor ingrese su reclamo       | " << endl;
-	cout << "	+-------------------------------------------+" << endl;
+
+	cout << "   Por favor ingrese su reclamo " << endl;
 	cout << endl;
 	cin >> detalle;
 	cout << endl;
 
-	int idReclamo = autoGenerarIdReclamo();
+	int idReclamo = generarIdReclamo();
 
 	Reclamo reclamo(idReclamo, idUsuario, false, detalle, fechaActual);
 	//Reclamo(int idReclamo, int idUsuario, bool resuelto, std::string detalle, Fecha fecha);
 
-	if (_archivoReclamo.guardarReg(reclamo))
+	if (archivoReclamos.guardarReg(reclamo))
 	{
 		cout << "	+-------------------------------------------+" << endl;
 		cout << "	|   Reclamo registrado con exito. ID #" << idReclamo << endl;
@@ -52,172 +53,175 @@ void ServicioReclamo::iniciarReclamo(int idUsuario)
 	}
 	else
 	{
-		cout << "	+-------------------------------------------+" << endl;
-		cout << "	|   No se pudo registar su reclamo. Intentalo mas tarde. " << idReclamo << endl;
-		cout << "	+-------------------------------------------+" << endl;
+		cout << "	+--------------------------------------------------------+" << endl;
+		cout << "	|   No se pudo registar su reclamo. Volve a intentarlo " << idReclamo << endl;
+		cout << "	+--------------------------------------------------------+" << endl;
 	}
 	system("pause");
 }
 
-void ServicioReclamo::mostrarReclamo(bool resuelto)
+void ServicioReclamo::mostrarReclamos(bool resuelto)
 {
 	system("cls");
 	Reclamo reclamo;
 
-	int cantReclamos = _archivoReclamo.cantidadRegistros();
+	int cantReclamos = archivoReclamos.cantidadRegistros();
 
 	if (cantReclamos > 0)
 	{
 		for (int c = 0; c < cantReclamos; c++)
 		{
-			reclamo = _archivoReclamo.leerReg(c);
+			reclamo = archivoReclamos.leerReg(c);
 			if (reclamo.getResuelto() == false)
 			{
-				cout << " ID Reclamo #" << reclamo.getIdReclamo() << endl;
-				cout << " ID Usuario #" << reclamo.getIdUsuario() << endl; 
-				cout << " Fecha: " << reclamo.getFecha().toString() << endl; 
-				cout << " Detalle: " << reclamo.getDetalle() << endl; 
+				//cout << string(80, '-') << endl;
+				//cout << left << setw(15) << "ID Reclamo" << "|"
+				//	<< setw(15) << "ID Usuario" << "|"
+				//	<< setw(15) << "Fecha" << "|"
+				//	<< setw(15) << "Detalle" << endl;
+				//cout << string(80, '-') << endl;
+				//
+				//cout << left << setw(15) << reclamo.getIdReclamo() << "|"
+				//	<< setw(15) << reclamo.getIdUsuario() << "|"
+				//	<< setw(15) << reclamo.getFecha().toString() << "|"
+				//	<< setw(15) << reclamo.getDetalle() << endl;
+				//cout << string(80, '-') << endl;
+
+				cout << "+--------------------------------------+" << endl;
+				cout << "| ID Reclamo #" << reclamo.getIdReclamo() << endl;
+				cout << "| ID Usuario #" << reclamo.getIdUsuario() << endl;
+				cout << "| Fecha: " << reclamo.getFecha().toString() << endl;
+				cout << "| Detalle: " << reclamo.getDetalle() << endl;
+				cout << "+--------------------------------------+" << endl;
 			}
 		}
 	}
+	else
+	{
+		cout << "+--------------------------------------+" << endl;
+		cout << "|     No hay reclamos para mostrar     |" << endl;
+		cout << "+--------------------------------------+" << endl;
+
+	}
+	system("pause");
 }
 
-//void ServicioReclamo::mostrarReclamo(bool resuelto)
-//{
-//
-//    system("cls");
-//    Reclamo r;
-//
-//    int cantidad = _archivoReclamos.cantidadRegistros();
-//
-//    if(cantidad > 0)
-//    {
-//        for(int i=0; i<cantidad; i++)
-//        {
-//            r = _archivoReclamos.leerReclamo(i);
-//
-//            if(r.getResuelto() == resuelto)
-//            {
-//                cout << "-----------------------------------------" << endl;
-//                cout << " ID Reclamo #" << r.getIdReclamo() << endl;
-//                cout << " ID Usuario #" << r.getIdUsuario() << endl;
-//                cout << " Fecha: " << r.getFecha().toString() << endl;
-//                cout << " Detalle: " << r.getDetalle() << endl;
-//            }
-//        }
-//    }
-//    else
-//    {
-//        cout << " --- No existen reclamos --- " << endl;
-//    }
-//
-//    cout << endl;
-//    system("pause");
-//}
+void ServicioReclamo::verReclamosUsuario(int idUsuario)
+{
+	system("cls");
+	Reclamo reclamo;
+	int* reclamos;
 
+	int cantReclamos = archivoReclamos.cantidadRegistros();
+	int cantReclamosUsuario = archivoReclamos.cantidadReclamosPorUsuario(cantReclamos, idUsuario);
 
-//void ServicioReclamo::verReclamosUsuario(int idUsuario)
-//{
-//
-//    system("cls");
-//
-//    Reclamo reclamo;
-//    int *vectReclamos;
-//
-//    int cantidad = _archivoReclamos.getCantidadReclamos();
-//
-//    int tam = _archivoReclamos.cantidadDeRegistrosPorUsuario(cantidad, idUsuario);
-//
-//    vectReclamos = new int[tam];
-//
-//    if(vectReclamos == nullptr)
-//    {
-//        return;
-//    }
-//
-//    *vectReclamos = _archivoReclamos.leerRegistrosPorUsuario(cantidad, vectReclamos, tam, idUsuario);
-//
-//    cout << "+-------------------------------------------+" << endl;
-//    cout << "|                   RECLAMOS                |" << endl;
-//    cout << "+-------------------------------------------+" << endl;
-//
-//    for(int i=0; i<tam; i++)
-//    {
-//
-//        reclamo = _archivoReclamos.leerReclamo(vectReclamos[i]);
-//
-//        if(reclamo.getResuelto())
-//        {
-//            cout << " Estado del reclamo: RESUELTO" << endl;
-//        }
-//        else
-//        {
-//            cout << " Estado del reclamo: EN PROCESO" << endl;
-//        }
-//        cout << " ID #" << reclamo.getIdReclamo() << endl;
-//        cout << " Detalle: " << reclamo.getDetalle() << endl;
-//        cout << "+-------------------------------------------+" << endl;
-//    }
-//
-//    delete[]vectReclamos;
-//
-//    system("pause");
-//}
+	reclamos = new int[cantReclamosUsuario];
+	if (reclamos == nullptr) { return; }
 
-//void ServicioReclamo::cambiarEstadoReclamo()
-//{
-//
-//    system("cls");
-//    int idReclamo, opcion;
-//    Reclamo reclamo;
-//
-//    cout << "+-------------------------------------------+" << endl;
-//    cout << "|              MODIFICAR RECLAMO            |" << endl;
-//    cout << "+-------------------------------------------+" << endl;
-//    cout << endl;
-//
-//    cout << " Ingrese ID de Reclamo: ";
-//    cin >> idReclamo;
-//
-//    int pos = _archivoReclamos.buscarReclamo(idReclamo);
-//
-//    if(pos != -1)
-//    {
-//        reclamo = _archivoReclamos.leerReclamo(pos);
-//
-//        if(reclamo.getResuelto())
-//        {
-//            cout << " Estado: RESUELTO" << endl;
-//            cout << endl;
-//            cout << " Desea cambiar el estado a ACTIVO: 1-SI | 2-NO" << endl;
-//            cin >> opcion;
-//            if(opcion)
-//            {
-//                reclamo.setResuelto(false);
-//                _archivoReclamos.modificarReclamo(reclamo, pos);
-//            }
-//        }
-//        else
-//        {
-//            cout << " Estado: ACTIVO" << endl;
-//            cout << endl;
-//            cout << " Desea cambiar el estado a RESUELTO: 1-SI | 2-NO" << endl;
-//            cin >> opcion;
-//            if(opcion)
-//            {
-//                reclamo.setResuelto(true);
-//                _archivoReclamos.modificarReclamo(reclamo, pos);
-//            }
-//        }
-//    }
-//    else
-//    {
-//        cout << "+---------------------------+" << endl;
-//        cout << "|  --- El ID no existe ---  |" << endl;
-//        cout << "+---------------------------+" << endl;
-//    }
-//
-//    cout << endl;
-//    system("pause");
-//}
+	*reclamos = archivoReclamos.reclamosPorUsuario(cantReclamos, reclamos, idUsuario);
+
+	cout << "   +--------------------------------+" << endl;
+	cout << "   |      RECLAMOS POR USUARIO      |" << endl;
+	cout << "   +--------------------------------+" << endl;
+
+	for (int i = 0; i < cantReclamosUsuario; i++)
+	{
+		reclamo = archivoReclamos.leerReg(reclamos[i]);
+
+		if (reclamo.getResuelto())
+		{
+			cout << "   +--------------------------------------+" << endl;
+			cout << "   | ID Reclamo #" << reclamo.getIdReclamo() << endl;
+			cout << "   | ID Usuario #" << reclamo.getIdUsuario() << endl;
+			cout << "   | Fecha: " << reclamo.getFecha().toString() << endl;
+			cout << "   | Detalle: " << reclamo.getDetalle() << endl;
+			cout << "   +--------------------------------------+" << endl;
+		}
+		else
+		{
+			cout << "   +-------------------------------+" << endl;
+			cout << "   |		Reclamo en proceso		|" << endl;
+			cout << "   +-------------------------------+" << endl;
+		}
+	}
+
+	delete[]reclamos;
+	system("pause");
+}
+
+void ServicioReclamo::cambiarEstadoReclamo()
+{
+	system("cls");
+
+	Reclamo reclamo;
+	int idReclamo, opc;
+
+	cout << "   + --------------------------- +" << endl;
+	cout << "   |      MODIFICAR RECLAMO      |" << endl;
+	cout << "   + --------------------------- +" << endl;
+	cout << endl;
+
+	cout << "   Por favor, ingresa el ID del reclamo" << endl;
+	cin >> idReclamo;
+
+	int pos = archivoReclamos.buscarReg(idReclamo);
+	if (pos != -1)
+	{
+		reclamo = archivoReclamos.leerReg(pos);
+		if (reclamo.getResuelto())
+		{
+			cout << "   Reclamo: RESUELTO" << endl;
+			cout << " Queres establecer el estado del reclamo a ACTIVO? ";
+			cout << " 1. SI | 0. NO ";
+			cin >> opc;
+
+			switch (opc)
+			{
+			case 1:
+				reclamo.setResuelto(false);
+				archivoReclamos.modificarReg(reclamo, pos);
+				break;
+
+			default:
+				break;
+			}
+		}
+		else
+		{
+			cout << "   Reclamo: ACTIVO" << endl;
+			cout << " Queres establecer el estado del reclamo a RESUELTO? ";
+			cout << " 1. SI | 0. NO ";
+			cin >> opc;
+
+			switch (opc)
+			{
+			case 1:
+				reclamo.setResuelto(true);
+				archivoReclamos.modificarReg(reclamo, pos);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		system("cls");
+
+		cout << endl << endl << endl;
+		cout << "   +--------------------------------+" << endl;
+		cout << "   |   Cambio realizado con exito   |" << endl;
+		cout << "   +--------------------------------+" << endl;
+		cout << endl << endl << endl;
+	}
+	else
+	{
+		cout << "+--------------------------------------------------------------------+" << endl;
+		cout << "|     EL ID ingresado no existe o no se han registrado reclamos.     |" << endl;
+		cout << "|							Volve a intentarlo                        |" << endl;
+		cout << "+--------------------------------------------------------------------+" << endl;
+		cout << endl;
+	}
+	system("pause");
+
+}
 

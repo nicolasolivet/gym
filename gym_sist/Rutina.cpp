@@ -1,15 +1,9 @@
 #include <iostream>
-#include <cstring>
-
+#include <string>
 #include "Rutina.h"
-
 using namespace std;
 
-
-Rutina::Rutina()
-{
-
-}
+Rutina::Rutina(){}
 
 Rutina::Rutina(int idRutina, int frecuenciaSemanal, int idEntrenador, string nombreRutina, string descripcion)
 {
@@ -23,50 +17,50 @@ Rutina::Rutina(int idRutina, int frecuenciaSemanal, int idEntrenador, string nom
 
 void Rutina::setIdRutina(int idRutina)
 {
-    _idRutina = idRutina;
+    this->idRutina = idRutina;
 }
 
 void Rutina::setFrecuenciaSemanal(int frecuenciaSemanal)
 {
-    _frecuenciaSemanal = frecuenciaSemanal;
+    this->frecuenciaSemanal = frecuenciaSemanal;
 }
 
 void Rutina::setIdEntrenador(int idEntrenador)
 {
-    _idEntrenador = idEntrenador;
+    this->idEntrenador = idEntrenador;
 }
 
 void Rutina::setNombreRutina(string nombreRutina)
 {
-    strcpy(_nombreRutina, nombreRutina.c_str());
+    strcpy(this->nombreRutina, nombreRutina.c_str());
 }
 
 void Rutina::setDescripcion(string descripcion)
 {
-    strcpy(_descripcion, descripcion.c_str());
+    strcpy(this->descripcion, descripcion.c_str());
 }
 
 int Rutina::getIdRutina()
 {
-    return _idRutina;
+    return idRutina;
 }
 
 int Rutina::getFrecuenciaSemanal()
 {
-    return _frecuenciaSemanal;
+    return frecuenciaSemanal;
 }
 
 int Rutina::getIdEntrenador()
 {
-    return _idEntrenador;
+    return idEntrenador;
 }
 
 string Rutina::getNombreRutina()
 {
-    return _nombreRutina;
+    return nombreRutina;
 }
 
 string Rutina::getDescripcion()
 {
-    return _descripcion;
+    return descripcion;
 }

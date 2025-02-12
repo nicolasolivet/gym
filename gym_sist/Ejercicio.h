@@ -16,7 +16,7 @@ class Ejercicio
 
     private:
 
-        int _idEjercicio;
-        char _nombreEjercicio[30];
-        char _descripcion[100];
+        int idEjercicio;
+        char nombreEjercicio[30];
+        char descripcion[100];
 };

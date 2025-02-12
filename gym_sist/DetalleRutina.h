@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 
 class DetalleRutina
 {
@@ -18,8 +18,8 @@ public:
         float* getPeso();
 
     private:
-        int _idEjercicio[10];
-        int _idRutina;
-        int _repeticiones[10];
-        float _peso[10];
+        int idEjercicio[10];
+        int idRutina;
+        int repeticiones[10];
+        float peso[10];
 };

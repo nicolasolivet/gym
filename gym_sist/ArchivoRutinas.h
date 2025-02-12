@@ -8,16 +8,16 @@ class ArchivoRutinas
         ArchivoRutinas();
         ArchivoRutinas(std::string nombreArchivo);
 
-        bool guardarRutina(Rutina rutina);
-        bool guardarRutina(Rutina rutina, int posicion);
-        int buscarRutina(int idRutina);
-        Rutina leerRegistroRutina(int posicion);
-        int cantidadRegistrosRutinas();
-        void leerRegistrosRutina(int cantidadRegistros, Rutina *vecRutina);
+        bool guardarReg(Rutina rutina);
+        bool modificarReg(Rutina rutina, int posicion);
+        Rutina leerReg(int posicion);
+        int cantidadRegistros();
+        void leerRegistros(int cantidadRegistros, Rutina *rutinas);
+        int buscarReg(int idRutina);
 
-        int cantidadDeRegistrosPorEntrenador(int cantidadRegistros, int idEntrenador);
-        int leerRegistrosRutinasPorEntrenador(int cantidadRegistros, int vectRutina[], int tam, int idEntrenador);
+        int cantidadRutinasPorEntrenador(int cantidadRegistros, int idEntrenador);
+        int rutinasPorEntrenador(int cantidadRegistros, int vectRutina[], int idEntrenador);
 
     private:
-        std::string _nombreArchivo;
+        std::string archivoRutinas;
 };

@@ -10,24 +10,22 @@
 
 using namespace std;
 //
-//MenuGerente::MenuGerente(UsuarioAutenticado usuario) : _usuario(usuario) {}
-//
-//void MenuGerente::comprobarEstadoDeGerente()
-//{
-//    system("cls");
-//    if(!_usuario.estaHabilitado())
-//    {
-//        cout << "+--------------------------------------------------------------+" << endl;
-//        cout << "| Actualmente no se encuentra habilitado para ingresar al Menu |" << endl;
-//        cout << "|   Comuniquese con un gerente para regularizar su estado.     |" << endl;
-//        cout << "|                                                              |" << endl;
-//        cout << "|                   EQUIPO DE METALGYM                         |" << endl;
-//        cout << "+--------------------------------------------------------------+" << endl;
-//        return;
-//    }
-//
-//    mostrarMenuGerente();
-//}
+MenuGerente::MenuGerente(UsuarioAutenticado usuario) : usuario(usuario) {}
+
+void MenuGerente::comprobarEstadoDeGerente()
+{
+    system("cls");
+    if(!usuario.getEstado())
+    {
+        cout << "+--------------------------------------------------------------+" << endl;
+        cout << "|              No estas habilitado para menu                   |" << endl;
+        cout << "|   Comunicate con un gerente para regularizar su estado       |" << endl;
+        cout << "+--------------------------------------------------------------+" << endl;
+        return;
+    }
+
+    mostrarMenuGerente();
+}
 //
 //void MenuGerente::mostrarMenuGerente()
 //{
@@ -36,21 +34,21 @@ using namespace std;
 //    do
 //    {
 //        system("cls");
-//        cout << "  GERENTE: #" << _usuario.getIdUsuario()  << endl;
+//        cout << "     GERENTE: #" << usuario.getIdUsuario()  << endl;
 //        cout << "+--------------------------------------+" << endl;
 //        cout << "|             MENU GERENTE             |" << endl;
 //        cout << "+--------------------------------------+" << endl;
-//        cout << "| 1 - GESTIONAR SOCIOS                 |" << endl;
-//        cout << "| 2 - GESTIONAR ENTRENADORES           |" << endl;
-//        cout << "| 3 - GESTIONAR GERENTE                |" << endl;
-//        cout << "| 4 - GESTIONAR PAGOS                  |" << endl;
-//        cout << "| 5 - GESTIONAR RECLAMOS               |" << endl;
-//        cout << "| 6 - VER ESTADISTICAS                 |" << endl;
+//        cout << "|   [1] GESTIONAR SOCIOS               |" << endl;
+//        cout << "|   [2] GESTIONAR ENTRENADORES         |" << endl;
+//        cout << "|   [3] GESTIONAR GERENTE              |" << endl;
+//        cout << "|   [4] GESTIONAR PAGOS                |" << endl;
+//        cout << "|   [5] GESTIONAR RECLAMOS             |" << endl;
+//        cout << "|   [6] VER ESTADISTICAS               |" << endl;
 //        cout << "+--------------------------------------+" << endl;
-//        cout << "| 0 - SALIR                            |" << endl;
+//        cout << "|   [0] SALIR                          |" << endl;
 //        cout << "+--------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //        system("cls");
@@ -98,19 +96,19 @@ using namespace std;
 //    do
 //    {
 //        system("cls");
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "|                SOCIOS                  |" << endl;
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "| 1 - VER LISTA DE SOCIOS                |" << endl;
-//        cout << "| 2 - AGREGAR NUEVO SOCIO                |" << endl;
-//        cout << "| 3 - MODIFICAR SOCIO                    |" << endl;
-//        cout << "| 4 - BUSCAR SOCIO                       |" << endl;
-//        cout << "| 5 - SOCIOS SIN ENTRENADOR              |" << endl;
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "| 0 - VOLVER ATRAS                       |" << endl;
-//        cout << "+----------------------------------------+" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|                SOCIOS                    |" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|   [1] VER LISTA DE SOCIOS                |" << endl;
+//        cout << "|   [2] AGREGAR NUEVO SOCIO                |" << endl;
+//        cout << "|   [3] MODIFICAR SOCIO                    |" << endl;
+//        cout << "|   [4] BUSCAR SOCIO                       |" << endl;
+//        cout << "|   [5] SOCIOS SIN ENTRENADOR              |" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|   [0] VOLVER ATRAS                       |" << endl;
+//        cout << "+------------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //        system("cls");
@@ -152,17 +150,17 @@ using namespace std;
 //    do
 //    {
 //        system("cls");
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "|           LISTAS DE SOCIOS             |" << endl;
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "| 1 - VER LISTA ORDENADA POR ID          |" << endl;
-//        cout << "| 2 - VER LISTA ORDENADA POR DNI         |" << endl;
-//        cout << "| 3 - VER LISTA ORDENADA POR APELLIDO    |" << endl;
-//        cout << "+----------------------------------------+" << endl;
-//        cout << "| 0 - VOLVER ATRAS                       |" << endl;
-//        cout << "+----------------------------------------+" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|           LISTAS DE SOCIOS               |" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|   [1] VER LISTA ORDENADA POR ID          |" << endl;
+//        cout << "|   [2] VER LISTA ORDENADA POR DNI         |" << endl;
+//        cout << "|   [3] VER LISTA ORDENADA POR APELLIDO    |" << endl;
+//        cout << "+------------------------------------------+" << endl;
+//        cout << "|   [0] VOLVER ATRAS                       |" << endl;
+//        cout << "+------------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //        system("cls");
@@ -212,7 +210,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                           |" << endl;
 //        cout << "+--------------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //
@@ -271,7 +269,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                       |" << endl;
 //        cout << "+----------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //        system("cls");
@@ -319,7 +317,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                       |" << endl;
 //        cout << "+----------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //
@@ -375,7 +373,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                       |" << endl;
 //        cout << "+----------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //        system("cls");
@@ -424,7 +422,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                          |" << endl;
 //        cout << "+-------------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //
@@ -469,7 +467,7 @@ using namespace std;
 //        cout << "| 0 - VOLVER ATRAS                            |" << endl;
 //        cout << "+---------------------------------------------+" << endl;
 //        cout << endl;
-//        cout << " Su seleccion: ";
+//        cout << " Opcion elegida: ";
 //        cin >> opcion;
 //
 //

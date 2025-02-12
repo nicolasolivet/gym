@@ -7,20 +7,20 @@ class ArchivoEmpleados
         ArchivoEmpleados();
         ArchivoEmpleados(std::string nombreArchivo);
 
-        bool guardarEmpleado(Empleado emp);
-        bool guardarEmpleado(Empleado emp, int posicion);
-        int buscarEmpleado(int idEmpleado);
-        Empleado leerRegistroEmpleado(int posicion);
-        int cantidadRegistrosEmpleados();
-        void leerRegistrosEmpleados(int cantidadRegistros, Empleado *vectEmpleado);
+        bool guardarReg(Empleado emp);
+        bool modificarReg(Empleado emp, int posicion);
+        Empleado leerReg(int posicion);
+        int cantidadRegistros();
+        void leerRegistros(int cantidadRegistros, Empleado *empleados);
+        int buscarReg(int idEmpleado);
 
-        Empleado buscarEmpleadoPorIdSocio(int id);
+        //Empleado buscarEmpleadoPorIdSocio(int id);
 
-        int cantidadRegistrosEmpleadosPorEstado(int cantidadRegistros, bool estado, int idRol);
-        int leerRegistrosEmpleadosActivos(int cantidadRegistros, int vectEmpleados[], int tam, int idRol);
+        int cantidadEmpleadosPorEstado(int cantidadRegistros, bool estado, int idRol);
+        int empleadosActivos(int cantidadRegistros, int vectEmpleados[], int idRol);
 
     private:
-        std::string _nombreArchivo;
+        std::string archivoEmpleados;
 };
 
 

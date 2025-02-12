@@ -7,14 +7,14 @@ ArchivoSocios::ArchivoSocios() {}
 
 ArchivoSocios::ArchivoSocios(string nombreArchivo)
 {
-    _nombreArchivo = nombreArchivo;
+    _archivoSocios = nombreArchivo;
 }
 
 bool ArchivoSocios::guardarReg(Socio &socio)
 {
     bool guardado;
     FILE *pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "ab");
+    pfile = fopen(_archivoSocios.c_str(), "ab");
     if (pfile == nullptr) { return false; }
 
     guardado = fwrite(&socio, sizeof(Socio), 1, pfile);
@@ -27,7 +27,7 @@ Socio ArchivoSocios::leerReg(int posicion)
 {
     Socio reg;
     FILE* pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "rb");
+    pfile = fopen(_archivoSocios.c_str(), "rb");
     if (pfile == nullptr) { return reg; }
 
     fseek(pfile, sizeof(Socio) * posicion, SEEK_SET);
@@ -41,7 +41,7 @@ bool ArchivoSocios::modificarReg(Socio &socio, int posicion)
 {
     bool modificado;
     FILE* pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "rb+");
+    pfile = fopen(_archivoSocios.c_str(), "rb+");
     if (pfile == nullptr) { return false; }
 
     fseek(pfile, sizeof(Socio) * posicion, SEEK_SET);
@@ -51,45 +51,23 @@ bool ArchivoSocios::modificarReg(Socio &socio, int posicion)
     return modificado;
 }
 
-int ArchivoSocios::buscarReg(int idSocio) 
-{
-    Socio socio;
-    int posicion = 0;
-    FILE* pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "rb");
-    if (pfile == nullptr) { return -1; }
-
-    while (fread(&socio, sizeof(Socio), 1, pfile))
-    {
-        if (socio.getIdUsuario() == idSocio) 
-        {
-            fclose(pfile);
-            return posicion;
-        }
-        posicion++;
-    }
-    
-    fclose(pfile);
-    return -2;
-}
-
 int ArchivoSocios::cantidadRegistros()
 {
     FILE* pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "rb");
+    pfile = fopen(_archivoSocios.c_str(), "rb");
     if (pfile == nullptr) { return false; }
 
     fseek(pfile, 0, SEEK_END);
-    int cantReg = ftell(pfile);
+    int cantReg = ftell(pfile) / sizeof(Socio);
     fclose(pfile);
 
-    return cantReg / sizeof(Socio);
+    return cantReg;
 }
 
 void ArchivoSocios::leerRegistros(int cantReg, Socio *socios)
 {
     FILE* pfile;
-    pfile = fopen(_nombreArchivo.c_str(), "rb");
+    pfile = fopen(_archivoSocios.c_str(), "rb");
     if (pfile == nullptr) { return; }
 
     for (int i = 0; i < cantReg; i++)
@@ -100,5 +78,25 @@ void ArchivoSocios::leerRegistros(int cantReg, Socio *socios)
     fclose(pfile);
 }
 
+int ArchivoSocios::buscarReg(int idSocio) 
+{
+    Socio socio;
+    int posicion = 0;
 
+    FILE* pfile;
+    pfile = fopen(_archivoSocios.c_str(), "rb");
+    if (pfile == nullptr) { return -2; }
 
+    while (fread(&socio, sizeof(Socio), 1, pfile))
+    {
+        if (socio.getIdUsuario() == idSocio) 
+        {
+            fclose(pfile);
+            return posicion;
+        }
+        posicion++;
+    }
+    fclose(pfile);
+    
+    return -1;
+}

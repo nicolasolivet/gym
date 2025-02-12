@@ -8,13 +8,13 @@ class ArchivoEjercicios
         ArchivoEjercicios();
         ArchivoEjercicios(std::string nombreArchivo);
     
-        bool guardarEjercicio(Ejercicio ejercicio);
-        bool guardarEjercicio(Ejercicio ejercicio, int posicion);
-        int buscarEjercicio(int idEjercicio);
-        Ejercicio leerRegistroEjercicio(int posicion);
-        int cantidadRegistrosEjercicios();
-        void leerRegistrosEjercicio(int cantidadRegistros, Ejercicio *vecEjercicio);
+        bool guardarReg(Ejercicio ejercicio);
+        bool modificarReg(Ejercicio ejercicio, int posicion);
+        Ejercicio leerReg(int posicion);
+        int cantidadRegistros();
+        void leerRegistros(int cantidadRegistros, Ejercicio *vecEjercicio);
+        int buscarReg(int idEjercicio);
     
     private:
-        std::string _nombreArchivo;
+        std::string archivoEjercicios;
 };
